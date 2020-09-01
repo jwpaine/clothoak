@@ -1,0 +1,15 @@
+without merge:
+retrived cart: {
+        "cartitems":[{"name":"tshirt-crew","image":"hdka1tg.jpg","size":"L","price":21}],"subtotal":21,"shipping":1,"tax":1.21,"total":23.21
+        }
+
+
+with merge:
+
+retrived cart: {
+        "shipping":{"name":"John Paine Shipping","zip":"04240","address":"40 Mount Hope Ave","state":"Maine","city":"Lewiston"},
+        "email":"mdibound@gmail.com","billing":{"name":"John Paine Billing","zip":"04240","address":"40 Mount Hope Ave","state":"Maine","city":"Lewiston"},
+        "cartitems":[{"name":"tshirt-crew","image":"hdka1tg.jpg","size":"L","price":21},{"name":"tshirt-crew","image":"hdka1tg.jpg","size":"L","price":21}]
+        }
+
+

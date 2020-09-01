@@ -1,0 +1,23 @@
+a {
+  text-decoration: none; }
+
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background: #FFF;
+  height: 75px;
+  border-bottom: 1px dotted gray; }
+  header a {
+    color: #303030;
+    padding: 10px; }
+  header logo {
+    height: 50px;
+    width: 130px;
+    border: 1px dotted lightgray;
+    margin-left: 20px; }
+  header .links {
+    margin-right: 20px; }
+    header .links a:hover {
+      color: darkgreen; }

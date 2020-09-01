@@ -1,0 +1,6 @@
+
+aws dynamodb update-item \
+    --table-name cart \
+    --key '{"id":{"S":"22a9e140-befe-11e9-a904-0d6f5ac68c57"}}' \
+    --update-expression "REMOVE cart_items[0]" \
+    --return-values ALL_NEW
