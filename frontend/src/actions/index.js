@@ -740,6 +740,26 @@ export const submitPayment = (token, callback) => async dispatch => {
 
 }
 
+export const submitPaymentGuest = (token, callback) => async dispatch => {
+
+	console.log(`submitting guest payment to backend`)
+
+
+	let headers = {
+		"headers": {
+			'Content-Type': 'application/json',
+			"cartid" : localStorage.getItem('cartid'),
+		}
+	}
+	const response = await axios.post(`${api_url}/payment`, token, headers ).then((response)=>{
+		dispatch({type : "PAYMENT_SUCCESS", payload: response.data})
+        callback()
+	}).catch(function (error) {
+
+	});
+
+}
+
 export const updateCard = (token, callback) => async dispatch => {
 
 	console.log(`updating card  using token: ${token}`)

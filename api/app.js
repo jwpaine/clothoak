@@ -114,6 +114,88 @@ authenticatedRoute.post("/payment", function(req, res, next) {
 	})
 })
 
+
+app.post("/payment", function(req, res, next) {
+
+	// get customer data by email
+	let cartid = req.header('Cartid')
+
+	console.log(`processing payment for guest: ${cartid}`)
+	console.log(`${JSON.stringify(req.body)}`) 
+
+	let guest = new Guest(cartid)
+
+
+	guest.get(dynamodb, function(err, g) {
+		if (err) return res.status('502').send(err)
+
+		console.log(`guest data obtained: ${JSON.stringify(g)}`)
+
+		let email = g.shipping.email
+		let customer = new Customer(email)
+		customer.create(docClient, g, function(err, c) {
+			if (err) {
+				if (err) return res.status(502).send(err)
+			}
+			console.log('Guest saved as new customer!')
+			res.send('success!')
+		})
+
+		// guest.cache(c)
+
+		// StripeConnect.createCustomer(stripe, req.body.id, res.locals.user.email, c.shipping, function(err, stripeCustomer) {
+		// 	if(err) {
+		// 		console.log(err)
+		// 		return res.status(502).send(err)
+		// 	}
+		// 	// get order data
+		// 	customer.cart().get(null, function(err, cartData) {
+		// 		if (err) return res.status(502).send(err)
+		// 	    // TODO: verify cartData	
+		// 		console.log(`cart total: ${cartData.total}`)
+		// 		// charge customer
+		// 		StripeConnect.chargeCustomer(stripe, stripeCustomer.id, res.locals.user.email, cartData.total, function(err, charge) {
+		// 			if (err) return res.status(502).send(err)
+		// 			// save order and empty cart	
+		// 			customer.order().save(docClient, cartData, charge, stripeCustomer, function(err, r) {
+		// 				if (err) return res.status(502).send(err)
+		// 				res.send('success!')
+
+		// 				// send order info via email
+		// 				let orderDetails = '--- Order Summary --- <br/>'
+
+
+		// 				let cartItems = cartData.cartitems
+		// 				for (var i in cartItems) {
+		// 					orderDetails += `Item: ${cartItems[i].name}, Color: ${cartItems[i].color}, Price: ${cartItems[i].price}, Quantity: ${cartItems[i].qty} <br/>`
+		// 				}
+
+		// 				orderDetails += `<br/>`
+		// 				orderDetails += `Subtotal: ${cartData.subtotal} <br/>`
+		// 				orderDetails += `Shipping: ${cartData.shipping} <br/>`
+		// 				orderDetails += `Total: ${cartData.total} <br/>`
+
+		// 				orderDetails += '------------------ <br/></br/>'
+
+		// 				orderDetails += `If you have any questions regarding this order, please don't hesitate to reach out to us at <a href="mailto:support@clothoak.com">support@clothoak.com</a>`
+
+
+		// 				let body = `Thank you for your order! Your order is being processed and we will send another email once it has shipped. You may view order status anytime by visiting https://clothoak.com/account and clicking on 'order details' <br/><br/> ${orderDetails}`
+		// 				mailgun.send('orders@clothoak.com', res.locals.user.email, 'Your ClothoaK.com order', body, function(err, r) {
+		// 					if (err) {
+		// 						console.log(err)
+		// 						return
+		// 					}
+		// 					console.log('Order placement email sent successfully!')
+		// 				})
+
+		// 			});
+		// 		})	
+		// 	})
+		// });
+	})
+})
+
 			
 	// customer.get(dynamodb, function(err, c) {
 	// 	if (err) return res.status('502').send(err)

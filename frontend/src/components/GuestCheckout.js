@@ -237,9 +237,10 @@ class GuestCheckout extends Component {
     handleToken = (token, addresses) =>  {
         console.log({token, addresses})
 
-        this.props.submitPayment(token,  () => {
+        this.props.submitPaymentGuest(token,  () => {
 
-            this.props.history.push('/account');
+           // this.props.history.push('/account');
+            console.log(`order submitted!!`)
 
         });
     }

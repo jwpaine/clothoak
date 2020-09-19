@@ -31,8 +31,28 @@ function Customer(email) {
 	this.customerData = null
 }
 
-Customer.prototype.create = function(dynamodb, callback) {
-// Used by guest checkout
+Customer.prototype.create = function(docClient, guest, callback) {
+// create custoemr from guest
+
+let customerData = guest
+customerData.email = this.email
+customerData.guest = true;
+
+var params = {
+	TableName : 'clothoak_subscription',
+	Item : customerData
+
+  }
+  
+  docClient.put(params, function(err, data) {
+	  if (err) {
+		  callback(err, null)
+		  return
+	  }
+	  callback(null, data)
+
+	})
+
 }
 
 Customer.prototype.get = function(dynamodb, callback) {
