@@ -149,12 +149,12 @@ renderImages = item => {
 	}
 
 	//  let images = []
-	 for (var i in item.images) {
-		 console.log(item.images[i].original)
-		 let item_img = `https://s3.amazonaws.com/clothoak.com/static/images/items/${item.images[i].original}`
-		 item.images[i].original = item_img
-	// 	images.push({ original: `https://s3.amazonaws.com/clothoak.com/static/images/items/${item.images[i]}`})
-	 }  
+	//  for (var i in item.images) {
+	// 	 console.log(item.images[i].original)
+	// 	 let item_img = `https://s3.amazonaws.com/clothoak.com/static/images/items/${item.images[i].original}`
+	// 	 item.images[i].original = item_img
+	// // 	images.push({ original: `https://s3.amazonaws.com/clothoak.com/static/images/items/${item.images[i]}`})
+	//  }  
 
 	return <ImageGallery items={item.images} showThumbnails={false} showPlayButton={false} showFullscreenButton={false} />;
 }

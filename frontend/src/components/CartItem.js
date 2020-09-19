@@ -82,7 +82,7 @@ const CartItem = (props) => {
         <div className="item">
             <div className="img-wrap">
                 <Link to={`/item/${props.name}`}>
-                    <img src={`https://s3.amazonaws.com/clothoak.com/static/images/items/${props.image}`} />
+                    <img src={`${props.image}`} />
                 </Link>
             </div>
             <div className="details">

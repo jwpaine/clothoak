@@ -41,7 +41,6 @@ customerData.guest = true;
 var params = {
 	TableName : 'clothoak_subscription',
 	Item : customerData
-
   }
   
   docClient.put(params, function(err, data) {
@@ -49,7 +48,7 @@ var params = {
 		  callback(err, null)
 		  return
 	  }
-	  callback(null, data)
+	  callback(null, customerData)
 
 	})
 

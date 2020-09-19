@@ -92,12 +92,14 @@ class Address extends Component {
         super(props);
         if(props.preFill) {
 
-            this.props.change("email", props.preFill.shipping.email) 
-            this.props.change("name", props.preFill.shipping.name)
-            this.props.change("address", props.preFill.shipping.address)
-            this.props.change("city", props.preFill.shipping.city)
-            this.props.change("state", props.preFill.shipping.state)
-            this.props.change("zip", props.preFill.shipping.zip)
+            if (props.preFill.shipping) {
+                this.props.change("email", props.preFill.shipping.email) 
+                this.props.change("name", props.preFill.shipping.name)
+                this.props.change("address", props.preFill.shipping.address)
+                this.props.change("city", props.preFill.shipping.city)
+                this.props.change("state", props.preFill.shipping.state)
+                this.props.change("zip", props.preFill.shipping.zip)
+            }
 
         }
 

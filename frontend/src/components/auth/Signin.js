@@ -3,12 +3,13 @@ import { reduxForm, Field } from 'redux-form';
 import { compose } from 'redux'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types'; // ES6
+
 import queryString from 'query-string'
-import PulseLoader from "react-spinners"; 
 
 import { Link } from 'react-router-dom';
 import * as actions from '../../actions'
 import {AUTH_ERROR} from "../../actions/types";
+
 
 
 class Signin extends Component {
@@ -20,9 +21,9 @@ constructor(props) {
 
 	props.dispatch({type: AUTH_ERROR, payload: '' })
 	// redirect back to portal if already signed in
-// 	if (props.auth) {
-// 		this.props.history.push('/account');
-// 	} 
+	if (props.auth) {
+		this.props.history.push('/account');
+	} 
 
 }
 
@@ -109,7 +110,7 @@ renderMessages = () => {
 		return (
 			<div className="signin">
 
-					<h1>Sign in </h1>
+				<h1>Sign in </h1>
 
 				<form onSubmit={handleSubmit(this.onSubmit)}>
 					<fieldset>
@@ -141,13 +142,13 @@ renderMessages = () => {
 					{this.renderMessages()}
 
 					{/* { renderLoading(this.props.waitingReply) } */}
-					<PulseLoader
+					{/* <PulseLoader
 						size={150}
 						color={"#123abc"}
 						css="position:absolute;"
 						loading={this.props.waitingReply}
 						
-					/>
+					/> */}
 				</form>
 
 				{ verfied(this.props.unVerified, this.resendVerification)}
@@ -173,3 +174,5 @@ export default compose(
 	connect(mapeStateToProps, actions),
 	reduxForm({ form: 'signin'})
 )(Signin);
+
+

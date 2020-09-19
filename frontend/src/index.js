@@ -40,7 +40,7 @@ ReactDOM.render(
 		<BrowserRouter>
 			<App >
 				
-				{/* <Route path="/" exact component={Landing} /> */}
+			
 				 
 				<Route path="/" exact component={Welcome} />
 				<Route path="/signup" component={Signup} />

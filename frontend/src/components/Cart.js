@@ -126,10 +126,13 @@ class Cart extends Component {
             )
         } 
 
+       
+
         if (cart.cartitems.length > 0) {
             return (
                 <div>
                     {cart.cartitems.map( (item, index) => (
+                        
                         <CartItem key={index} index={index} removeItem={this.removeItem} item={item} name={item.name} qty={item.qty} price={item.price} image={item.image} color={item.color}/>
                     ))}
                 </div>
