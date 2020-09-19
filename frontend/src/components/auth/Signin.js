@@ -4,7 +4,7 @@ import { compose } from 'redux'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types'; // ES6
 import queryString from 'query-string'
-import PulseLoader from "react-spinners/ClipLoader";
+import PulseLoader from "react-spinners"; 
 
 import { Link } from 'react-router-dom';
 import * as actions from '../../actions'
@@ -22,7 +22,7 @@ constructor(props) {
 	// redirect back to portal if already signed in
 // 	if (props.auth) {
 // 		this.props.history.push('/account');
-// 	}
+// 	} 
 
 }
 

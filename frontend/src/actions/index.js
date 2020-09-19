@@ -12,7 +12,7 @@ import {
 } from './types';
 
 import { CognitoUserPool, CognitoUserAttribute, CognitoUser, AuthenticationDetails, CognitoRefreshToken , AmazonCognitoIdentity, InitiateAuth} from 'amazon-cognito-identity-js';
-import AWS from 'aws-sdk'
+import AWS from 'aws-sdk' 
 
 	var poolData = {
         UserPoolId : 'us-east-1_WA7fa9Lcs', // Your user pool id here
@@ -22,7 +22,7 @@ import AWS from 'aws-sdk'
 var cognitoUserr;
 
 let api_url = 'http://localhost:8080'   
-// let api_url = 'https://api.clothoak.com'
+// let api_url = 'https://api.clothoak.com'  
 
 export const signup = (formProps, callback) => async dispatch => {
 
@@ -493,6 +493,24 @@ export const loadCart = () => async dispatch => {
 	});
 }
 
+export const loadGuest = (callback) => async dispatch => {
+
+	console.log(`loading guest data`)
+	let cartid = localStorage.getItem('cartid')
+	let data = {
+		"headers": {
+			'Content-Type': 'application/json',
+			'Cartid' : cartid
+		} 
+	}
+	return axios.get(`${api_url}/guest`, data).then((response)=> {
+		dispatch({type : "SHOW_CUSTOMER", payload: response.data})
+		callback()
+	}).catch(function (error) {
+		if (error) throw error
+	});
+}
+
 export const loadCartPrivate = () => async dispatch => {
 
 	console.log(`loading private cart data`)
@@ -655,6 +673,24 @@ export const updateShippingAddress = (formProps, callback) => async dispatch => 
 	const response = await axios.post(`${api_url}/priv/address`, formProps, headers ).then((response)=>{
 		// dispatch({type : "SHOW_SUBSCRIPTION", payload: response.data})
 		dispatch({type : "GET_SHIPPING", payload: response.data})
+
+	}).catch(function (error) {
+	});
+}
+
+export const updateGuest = (formProps, callback) => async dispatch => {
+
+	console.log(`Saving Guest Info ${JSON.stringify(formProps)}`)
+	dispatch({type: ADD_ERROR, payload: "" })
+	let headers = {
+		"headers": {
+			'Content-Type': 'application/json',
+			"cartid" : localStorage.getItem('cartid'),
+		},
+	} 
+	const response = await axios.post(`${api_url}/guest`, formProps, headers ).then((response)=>{
+		// dispatch({type : "SHOW_SUBSCRIPTION", payload: response.data})
+		dispatch({type : "SHOW_CUSTOMER", payload: response.data}) 
 
 	}).catch(function (error) {
 	});

@@ -92,24 +92,44 @@ class Address extends Component {
         super(props);
         if(props.preFill) {
 
-            this.props.change("name", props.preFill.name)
-            this.props.change("address", props.preFill.address)
-            this.props.change("city", props.preFill.city)
-            this.props.change("state", props.preFill.state)
-            this.props.change("zip", props.preFill.zip)
+            this.props.change("email", props.preFill.shipping.email) 
+            this.props.change("name", props.preFill.shipping.name)
+            this.props.change("address", props.preFill.shipping.address)
+            this.props.change("city", props.preFill.shipping.city)
+            this.props.change("state", props.preFill.shipping.state)
+            this.props.change("zip", props.preFill.shipping.zip)
 
         }
 
     }
 
 
+renderEmailInput = (guest) => {
+    if (!guest) {
+        return
+    }
 
-
+    return (
+        <div>
+              <Field
+                    name="email"
+                    type="text"
+                    component="input"
+                    autoComplete="email"
+                    placeholder="Email"
+                />
+                 <br/> <br/>  
+        </div>
+    )
+}
+ 
     render() {
         return (
             <form form={this.props.form} form={this.form} onSubmit={this.props.handleSubmit}>
 
                 <fieldset>
+                    {this.renderEmailInput(this.props.guest)}
+                    
                     <Field
                         name="name"
                         type="text"
@@ -124,6 +144,7 @@ class Address extends Component {
                         autoComplete="address"
                         placeholder="Address"
                     />
+                   
                     <Field
                         name="city"
                         type="text"

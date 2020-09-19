@@ -26,23 +26,19 @@ function cartQty(cartitems) {
 	return qty
 }
 
-function Customer(email) {
-	this.email = email
+function Guest(cartid) {
+	this.cartid = cartid
 	this.customerData = null
 }
 
-Customer.prototype.create = function(dynamodb, callback) {
-// Used by guest checkout
-}
-
-Customer.prototype.get = function(dynamodb, callback) {
+Guest.prototype.get = function(dynamodb, callback) {
 
 	var params = {
-		TableName : 'clothoak_subscription',
+		TableName : 'clothoak_cart',
 		// AttributesToGet: [ "cartitems" ],
 		Key : {
-			"email" : {
-				"S" : this.email
+			"id" : { 
+				"S" : this.cartid 
 			}
 		}
 	}
@@ -56,11 +52,11 @@ Customer.prototype.get = function(dynamodb, callback) {
 	})
 }
 
-Customer.prototype.cache = function(customerData) {
+Guest.prototype.cache = function(customerData) {
 	this.customerData = customerData
 }
 
-Customer.prototype.order = function() {
+Guest.prototype.order = function() {
 	return {
 		// save order and flush cart
 		save : (docClient, cartData, charge, customer, callback) => {
@@ -161,7 +157,7 @@ Customer.prototype.order = function() {
 	}
 }
 
-Customer.prototype.address = function() {
+Guest.prototype.address = function() {
 
 	return {
 		get: (dynamodb, callback) => {
@@ -176,7 +172,7 @@ Customer.prototype.address = function() {
                   }
                 }
             }
-                              
+                  
             dynamodb.getItem(params, function(err, data){
                 if(err){
                   	callback(err, null)
@@ -189,8 +185,8 @@ Customer.prototype.address = function() {
 		update: (docClient, address, addressType, callback) => {
 			console.log(`updating address`);
 			docClient.update({
-            	TableName: 'clothoak_subscription',
-            	Key: { 'email': this.email },
+            	TableName: 'clothoak_cart',
+            	Key: { 'id': this.cartid },
             	ReturnValues: 'UPDATED_NEW',
             	UpdateExpression: 'set #addressType = :address',
             	ExpressionAttributeNames: {
@@ -213,7 +209,7 @@ Customer.prototype.address = function() {
 
 
 }
-Customer.prototype.cart = function() {
+Guest.prototype.cart = function() {
 	let params = {
 		TableName: 'clothoak_subscription',
 		AttributesToGet: [ "cartitems" ],
@@ -303,4 +299,4 @@ Customer.prototype.cart = function() {
 
 
 
-module.exports = Customer
+module.exports = Guest

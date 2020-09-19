@@ -12,6 +12,8 @@ import {ADD_ERROR, AUTH_ERROR} from "../actions/types";
 
 import ImageGallery from 'react-image-gallery'; 
 
+import Swal from 'sweetalert2' 
+
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 
 // const sizes = ['S', 'M', 'L', 'XL', '2XL', '3XL']
@@ -157,6 +159,62 @@ renderImages = item => {
 	return <ImageGallery items={item.images} showThumbnails={false} showPlayButton={false} showFullscreenButton={false} />;
 }
 
+notifyWhenAvailable = item => {
+	Swal.fire({
+		title: "We'll let you know!",
+		text: "Please enter your email address and we'll notify you as soon as this product becomes available!",
+		input: 'text', 
+		inputAttributes: {
+		  autocapitalize: 'off'
+		}, 
+		showCancelButton: false,
+		confirmButtonText: 'Submit', 
+		showLoaderOnConfirm: true,
+		preConfirm: (email) => {
+			let data = {
+				'item' : item.name,
+				'email' : email  
+			} 
+			fetch('https://api.clothoak.com/notifyme', { 
+				method: 'POST',
+				headers: {
+				  'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data),
+			  })
+			 
+		},
+		allowOutsideClick: () => !Swal.isLoading()
+	  }).then((result) => {
+		if (result.isConfirmed) {
+		  Swal.fire({
+			title: 'Done!',
+			text: "We'll let you know as soon as this product becomes available!"
+		  })
+		} 
+	  }) 
+}
+
+renderButton = item => {
+	if (!item) {
+		return
+	}
+
+
+	console.log(`available qty: ${item.available}`)
+	if (item.available > 0) {
+		return (
+			<button>Add To Cart</button>
+		)
+	}
+	return (
+		<div className="unavailable">   
+			<p>Currently Out of Stock</p> 
+			<a onClick={() => this.notifyWhenAvailable(item)}>Notify When Available</a>  
+		</div>
+	)
+}
+
 renderItem = item => {
 	
 	if(!item.name) { 
@@ -188,7 +246,7 @@ renderItem = item => {
 							/>
 						</div>
 					</fieldset>
-					<button>Add To Cart</button>
+					{this.renderButton(item)} 
 					{this.renderErrorMessage()}
 					
 				</div>

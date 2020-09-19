@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'; // ES6
 import { Link } from 'react-router-dom';
 import * as actions from '../../actions'
 
-import Signin from './Signin'
+
 import {AUTH_ERROR} from "../../actions/types";
 
 class Signup extends Component {

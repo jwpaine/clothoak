@@ -847,6 +847,15 @@ select {
           flex-direction: column;
 }
 
+.collection__items .item {
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+}
+
 .collection__items .img-wrap {
   -webkit-transition: -webkit-transform .2s ease-out;
   transition: -webkit-transform .2s ease-out;
@@ -855,9 +864,9 @@ select {
 }
 
 .collection__items .img-wrap:hover {
-  transform: scale(1.1, 1.1);
-  -webkit-transform: scale(1.1, 1.1);
-  -moz-transform: scale(1.1, 1.1);
+  transform: scale(1.05, 1.05);
+  -webkit-transform: scale(1.05, 1.05);
+  -moz-transform: scale(1.05, 1.05);
 }
 
 .collection__details {
@@ -1102,6 +1111,10 @@ select {
   padding: 0px 0px 50px 0px;
 }
 
+.cart__checkout button.get-started {
+  width: 160px;
+}
+
 .cart__checkout__totals {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1136,6 +1149,10 @@ select {
   display: flex;
   height: 100vh;
   background: #FEFEFE;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: row-reverse;
+          flex-direction: row-reverse;
 }
 
 .home .hero__img {
@@ -1145,6 +1162,12 @@ select {
           flex: 1;
   background-size: cover;
   background-position-x: 82%;
+}
+
+@media only screen and (min-width: 920px) {
+  .home .hero__img {
+    max-width: 660px;
+  }
 }
 
 .home .hero__text {
@@ -1164,9 +1187,31 @@ select {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  background: #FEFEFE;
+  background: rgba(255, 255, 255, 0.8);
   padding: 10px 0px;
-  height: 40%;
+  height: 100vh;
+}
+
+.home .hero__text p.donation {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  margin-bottom: 18px;
+}
+
+.home .hero__text p.donation img {
+  height: 32px;
+  padding: 0px 8px;
 }
 
 .home .hero__text button {
@@ -1182,6 +1227,7 @@ select {
   text-align: center;
   margin: 0;
   text-transform: uppercase;
+  max-width: 460px;
 }
 
 @media only screen and (max-width: 919px) {
@@ -1208,7 +1254,7 @@ select {
   text-align: center;
   max-width: 465px;
   margin: 0px;
-  padding: 10px 10px 25px 10px !important;
+  padding: 14px !important;
   font-size: 20px;
   max-width: 450px;
 }
@@ -1439,6 +1485,39 @@ header .links__mini-cart .quantity {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+}
+
+.item-page .item .details .unavailable {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: self-start;
+      -ms-flex-align: self-start;
+          align-items: self-start;
+}
+
+.item-page .item .details .unavailable p {
+  font-weight: 700;
+}
+
+.item-page .item .details .unavailable a {
+  padding: 20px 15px;
+  border: 1px solid #E2E2E2;
+  cursor: pointer;
+  background: #303030;
+  color: #FFF;
+  min-width: 100px;
+  font-size: 17px;
+  text-transform: uppercase;
+  border-radius: unset !important;
+}
+
+.item-page .item .details .unavailable a:hover {
+  background: #404040;
 }
 
 @media only screen and (max-width: 767px) {

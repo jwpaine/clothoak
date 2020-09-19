@@ -13,7 +13,7 @@ import styled from 'styled-components';
 export default ({ children }) => {
 	return (
 		<Wrapper>
-			<Header />
+			<Header />  
 			{ children }
 		</Wrapper>
 	);

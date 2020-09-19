@@ -10,6 +10,8 @@ const port = 8080
 const cart = require('./dynamo/cart')
 const item = require('./dynamo/item')
 const Customer = require('./dynamo/customer')
+const Guest = require('./dynamo/guest') 
+
 const Mailgun = require('./mailgun')
 const StripeConnect = require('./stripe')
 
@@ -194,7 +196,43 @@ authenticatedRoute.post("/address", function(req, res, next) {
 
 })
 
+app.post("/guest", function(req, res, next) {
 
+	let cartid = req.header('Cartid')
+
+	console.log(`updating data for guest using cartid: ${cartid}`)
+	console.log(`${JSON.stringify(req.body)}`) 
+
+	let guest = new Guest(cartid)
+
+	guest.address().update(docClient, req.body, 'shipping', function(err, r) {
+		if (err) {
+			console.log(`err`)
+			return res.status(502).send(err)
+		}
+		console.log(`success`)
+		res.send(r)
+	})
+
+})
+
+app.get("/guest", function(req, res, next) {
+
+	let cartid = req.header('Cartid')
+
+	console.log(`updating data for guest: ${cartid}`)
+	let guest = new Guest(cartid)
+
+	guest.get(dynamodb, function(err, r) {
+		if (err) {
+			console.log(err) 
+			return res.status(502).send(err)
+		}
+		console.log(`success`)
+		res.send(r)
+	})
+ 
+})
 
 authenticatedRoute.get("/cart", function(req, res, next) {
 
@@ -240,6 +278,17 @@ authenticatedRoute.get("/order", function(req, res, next) {
 
 })
 
+app.post("/notifyme",  function(req, res, next) {
+	
+	console.log(`notifyme: ${JSON.stringify(req.body)}`) 
+	
+	item.notify(docClient, req.body.item, req.body.email, function(err, r) {
+			if (err) {
+				return res.status(502).send(err)
+			}
+			res.send('ok')
+	})
+}) 
 
 app.get("/cart", function(req, res, next) {
 
@@ -284,7 +333,7 @@ app.post("/cart", function(req, res, next) {
 	if (req.query.action) {
 		if (req.query.action == 'delete') {
 			let cartIndex = req.body.index
-			console.log('action = delete')		
+			console.log('action = delete')		 
 			if (cartIndex != null) {
 				console.log(`request to delete cart item: ${cartIndex}`)
 				cart.delete(docClient, cartid, cartIndex, function(err, r) {

@@ -20,7 +20,7 @@ import CCForm from './CCForm'
 import Address from "./Address";
 
 
-class Checkout extends Component {
+class GuestCheckout extends Component {
 
     constructor(props) {
         super(props)
@@ -33,20 +33,18 @@ class Checkout extends Component {
 
 
     componentDidMount() {
-       if (!this.props.authenticated) {
-         //   this.props.history.push('/signin?next=cart');
-        
-            this.props.history.push('/guest'); 
-            this.props.history.go()  
-            return 
-           
-        }
+    //    if (!this.props.authenticated) {
+    //         this.props.history.push('/signin?next=cart');
+    //         return
+    //     }
 
-        this.props.loadCartPrivate(() => {
+        this.props.loadGuest(() => {
+         
+            
         });
 
-        this.props.getShippingAddress(() => {
-        });
+        // this.props.getShippingAddress(() => {
+        // });
     }
 
     componentDidUpdate(props) {
@@ -106,9 +104,9 @@ class Checkout extends Component {
         })
     }
 
-    updateShippingAddress = formProps => {
-        this.refreshSession()
-        this.props.updateShippingAddress(formProps, () => {
+   updateGuest = formProps => { 
+      //  this.refreshSession()
+        this.props.updateGuest(formProps, () => {
         });
     };
     updateBillingAddress = formProps => {
@@ -179,7 +177,7 @@ class Checkout extends Component {
                     )
             } 
 
-            if(shipping && !shipping.name || !shipping.address || !shipping.city || !shipping.state || !shipping.zip) {
+            if(shipping && !shipping.name || !shipping.address || !shipping.city || !shipping.state || !shipping.zip || !shipping.email) {
                 return(
                     <div>
                         <p>Please supply full shipping address</p>
@@ -208,14 +206,16 @@ class Checkout extends Component {
             return;
         }
 
-        console.log(`shipping received: ${JSON.stringify(data)}`)
+       console.log(`guest data received: ${JSON.stringify(data)}`)  
 
-    
+     
         return (
-            <div>
-                <h1>Where should we send it?</h1>
-                <Address name="shippingAddress"  preFill={data} onSubmit={this.updateShippingAddress.bind(this)}/>
-            </div>
+            <div> 
+                <h1>Where should we send it?</h1> 
+                <p>Already have an account? <Link to={`/signin`}>signin</Link></p>  
+                <Address name="shippingAddress" guest={true} preFill={data} onSubmit={this.updateGuest.bind(this)}/>
+               
+            </div> 
         )
     }
 
@@ -263,8 +263,6 @@ class Checkout extends Component {
                     { this.renderCartItems(this.props.cart.data)}
                     { this.renderSubmitButtons(this.props.customer.data, this.props.cart.data) }
 
-
-
                 </div>
 
 
@@ -295,7 +293,7 @@ function mapStateToProps(state, props) {
 
 export default compose(
     connect(mapStateToProps, actions)
-)(Checkout);
+)(GuestCheckout); 
 
 
 

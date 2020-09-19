@@ -72,10 +72,10 @@ class Header extends Component {
 
 			return (
 				<div className="links">
-					<Link to={`/signout`}>Sign out</Link>
-					<Link to="/account">My Account</Link>
-					<Link className="links__mini-cart" to="/cart">
-						<div className="quantity">{cartItems}</div>  
+					<Link disabled to={`/signout`}>Sign out</Link>
+					<Link disabled to="/account">My Account</Link>
+					<Link disabled className="links__mini-cart" to="/cart">
+						<div disabled className="quantity">{cartItems}</div>  
 					</Link>
 				</div>
 			)

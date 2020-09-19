@@ -3,7 +3,7 @@ import { reduxForm, Field } from 'redux-form';
 import { compose } from 'redux'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types'; // ES6
-import queryString from 'query-string'
+import queryString from 'query-string' 
 
 
 import { Link } from 'react-router-dom';

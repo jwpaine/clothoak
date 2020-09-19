@@ -342,6 +342,8 @@ align-items: center;
     flex-direction: column;
     align-items: center;
 
+ 
+
     > div {
         display: flex;
         @include mq('phone-wide', 'max') {
@@ -352,6 +354,11 @@ align-items: center;
         }
     }
 
+    .item { 
+        justify-content: flex-start;
+        align-items: flex-start; 
+    }
+
     .img-wrap {
         -webkit-transition: -webkit-transform .2s ease-out;
         -moz-transition: -moz-transform .2s ease-out;
@@ -360,9 +367,9 @@ align-items: center;
     }
 
     .img-wrap:hover {
-        transform:scale(1.1,1.1);
-        -webkit-transform:scale(1.1,1.1);
-        -moz-transform:scale(1.1,1.1);
+        transform:scale(1.05,1.05);
+        -webkit-transform:scale(1.05,1.05);
+        -moz-transform:scale(1.05,1.05); 
     }
 }
 
@@ -517,6 +524,10 @@ align-items: center;
     align-items: center;
     padding: 0px 0px 50px 0px;
 
+    button.get-started {
+        width: 160px; 
+    }
+
     &__totals {
         display: flex;
         justify-content: center;
@@ -548,14 +559,19 @@ align-items: center;
 
 display: flex;
 height: 100vh;
+// max-height: 700px; 
 //background: #F4F4ED;
 background: #FEFEFE;
+flex-direction: row-reverse; 
 
 &__img {
     background: url('https://s3.amazonaws.com/clothoak.com/static/images/welcome.not-today.jpg');
     flex: 1;
-    background-size: cover;
+    background-size: cover; 
     background-position-x: 82%;
+    @include mq('tablet', 'min') {
+      max-width: 660px; 
+    }
 }
 &__text {
     flex: 1;
@@ -563,16 +579,27 @@ background: #FEFEFE;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: #FEFEFE;  
-
+    background: rgba(255,255,255,0.8); 
     padding: 10px 0px; 
-    height: 40%; 
+    height: 100vh; 
 
+    p.donation {  
+        display: flex;
+        justify-content: center;
+        align-items: center; 
+        flex-direction: row;  
+        margin-bottom: 18px;   
+        
+        img {
+            height: 32px;  
+            padding: 0px 8px;  
+        }
+    }
 
     button {
         height: 60px; 
         padding: 0px 25px; 
-        font-size: 20px; 
+        font-size: 20px;  
     }
 
     h1 {
@@ -583,6 +610,7 @@ background: #FEFEFE;
         text-align: center;
         margin: 0;
         text-transform: uppercase; 
+        max-width: 460px;   
 
         @include mq('tablet', 'max') {
          //   color: white;
@@ -602,8 +630,8 @@ background: #FEFEFE;
         text-align: center;
         max-width: 465px; 
         margin: 0px; 
-        padding: 10px 10px 25px 10px !important;  
-        font-size: 20px; 
+        padding: 14px !important;    
+        font-size: 20px;  
         max-width: 450px; 
         @include mq('tablet', 'max') {
           //  color: lightgray;
@@ -761,6 +789,35 @@ padding: 30px;
     padding-left: 30px;
     display: flex;
     flex-direction: column;
+
+    // button {
+    //     width: 200px; 
+    // }
+
+    .unavailable {
+        display: flex;
+        flex-direction: column;
+        align-items: self-start; 
+        p {
+            font-weight: 700; 
+        }
+       a {  
+        padding: 20px 15px; 
+        border: 1px solid #E2E2E2;
+        cursor: pointer;
+        background: #303030;
+        color: #FFF;
+        min-width: 100px; 
+        font-size: 17px; 
+        text-transform: uppercase;
+    
+        border-radius: unset !important;
+    
+        &:hover {
+            background: #404040;
+        }
+       }
+    } 
 
     @include mq("tablet-small", "max") {
         padding-left: 0px;

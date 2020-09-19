@@ -14,14 +14,15 @@ export default () => {
 					<div className="hero__text tablet--show">
 						<h1>We're in this together.</h1>
 						<p>Premium 4-layer masks stitched with cotton, non-woven, and melt-blown fabrics. </p> 
-						<p className="donation">1 <img src="https://s3.amazonaws.com/clothoak.com/static/images/icons/mask-black.png" /> purchased = 1 <img src="https://s3.amazonaws.com/clothoak.com/static/images/icons/mask-black.png" /> donated.</p> 
-						<Link to={`/item/mask`}><button>Shop Masks</button></Link> 
+						<p>1 mask purchased = 1 mask donated.</p>
+                    
+						<Link to={`/item/mask`}><button>Shop Masks</button></Link>
 					</div>
 				</div>
 				<div className="hero__text tablet--hide">
 					<h1>We're in this together.</h1>
 					<p>Premium 4-layer masks stitched with cotton, non-woven, and melt-blown fabrics. </p> 
-					<p className="donation">1 <img src="https://s3.amazonaws.com/clothoak.com/static/images/icons/mask-black.png" /> purchased = 1 <img src="https://s3.amazonaws.com/clothoak.com/static/images/icons/mask-black.png" /> donated.</p> 
+					<p>1 mask purchased = 1 mask donated.</p> 
 				    <Link to={`/item/mask`}><button>Shop Masks</button></Link> 
 				</div>
 			</div>

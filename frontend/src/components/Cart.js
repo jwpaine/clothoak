@@ -65,7 +65,13 @@ class Cart extends Component {
     }
 
     continueCheckout = () => {
-        this.props.history.push('/checkout');
+        if (this.props.authenticated) {
+            this.props.history.push('/checkout');
+            return
+        }
+
+        this.props.history.push('/guest');
+
     }
 
     renderCartCheckout = cart => {
@@ -93,7 +99,10 @@ class Cart extends Component {
     renderCartHeading = cart => {
         if (!cart || cart.cartitems.length == 0) {
             return(
-                <h1>An empty cart :(</h1>
+                <div>
+                    <h1>An empty cart</h1>
+                    <h1> :( </h1> 
+                </div> 
             )
         }
 
@@ -108,14 +117,14 @@ class Cart extends Component {
             return (
                 <div className="item">
                     <div className="img-wrap">
-                        <Link to={`/collection`}><img className="add-another" src="https://s3.amazonaws.com/clothoak.com/items/hdka1tg.jpg" /></Link>
+                        <Link to={`/collection`}><img className="add-another" src="https://s3.amazonaws.com/clothoak.com/static/images/items/mask-black.jpg" /></Link>
                     </div>
                     <div className="details">
-                        <Link to={`/collection`}><button>Get Started</button></Link>
+                        <Link to={`/collection`}><button className="get-started">Get Started</button></Link>
                     </div>
                 </div>
             )
-        }
+        } 
 
         if (cart.cartitems.length > 0) {
             return (
@@ -129,10 +138,10 @@ class Cart extends Component {
         return (
             <div className="item">
                 <div className="img-wrap">
-                    <Link to={`/collection`}><img className="add-another" src="https://s3.amazonaws.com/clothoak.com/items/hdka1tg.jpg" /></Link>
+                    <Link to={`/collection`}><img className="add-another" src="https://s3.amazonaws.com/clothoak.com/static/images/items/mask-black.jpg" /></Link>
                 </div>
                 <div className="details">
-                    <Link to={`/collection`}><button>Get Started</button></Link>
+                    <Link to={`/collection`}><button className="get-started">Get Started</button></Link> 
                 </div>
             </div>
         )

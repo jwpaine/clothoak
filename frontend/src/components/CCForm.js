@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {CardElement, injectStripe, ReactStripeElements} from 'react-stripe-elements'
+import {CardElement, injectStripe, ReactStripeElements} from 'react-stripe-elements' 
 
 class CCForm extends React.Component<> {
 
@@ -25,14 +25,10 @@ class CCForm extends React.Component<> {
                             value={this.state.name}
                             onChange={this.onChange.bind(this)}
                         />
-                        <CardElement />>
+                        <CardElement />
                         <button>Submit</button>
                     </form>
                 </main>
-
-
-
-
         )
     }
 }
