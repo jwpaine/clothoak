@@ -1,0 +1,24 @@
+{
+    "aws" : {
+        "region": "",
+        "accessKeyId": "",
+        "secretAccessKey": ""
+    },
+    "cognito" : {
+        "region": "",
+        "cognitoUserPoolId": "",
+        "tokenUse": "",
+        "tokenExpiration": 3600000
+    },
+    "redis" : {
+        "host": "",
+        "username" : "",
+        "password" : ""
+    },
+    "mailgun" : {
+        "secretApiKey" : ""
+    },
+    "stripe" : {
+        "secretApiKey" : ""
+    }
+}

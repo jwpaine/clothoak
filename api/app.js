@@ -73,7 +73,7 @@ authenticatedRoute.post("/payment", function(req, res, next) {
 				console.log(`cart total: ${cartData.total}`)
 				// charge customer
 				StripeConnect.chargeCustomer(stripe, stripeCustomer.id, res.locals.user.email, cartData.total, function(err, charge) {
-					if (err) return res.status(502).send(err)
+					if (err) return res.status(502).send() 
 					// save order and empty cart	
 					customer.order().save(docClient, cartData, charge, stripeCustomer, function(err, r) {
 						if (err) return res.status(502).send(err)
@@ -154,11 +154,11 @@ app.post("/payment", function(req, res, next) {
 					StripeConnect.chargeCustomer(stripe, stripeCustomer.id, email, cartData.total, function(err, charge) {
 						if (err) {
 							console.log(err)
-							return res.status(502).send(err)
-						}
+							return res.status(502).send('error') 
+						} 
 						// save order and empty cart	
 						customer.order().save(docClient, cartData, charge, stripeCustomer, function(err, r) {
-							if (err) {
+							if (err) { 
 								console.log(err)
 								return res.status(502).send(err)
 							}
