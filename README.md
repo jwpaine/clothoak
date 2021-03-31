@@ -1,4 +1,4 @@
 # clothoak
-Ecommerce built with ReactJS, NodeJS/Express, AWS Cognito, Dynamodb, Stripe and Mailgun.
+Ecommerce built on ReactJS, NodeJS/Express, AWS Cognito, Dynamodb, Redis, Stripe and Mailgun.
 
 https://clothoak.com/item/test
