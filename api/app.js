@@ -4,10 +4,14 @@ const CognitoExpress = require("cognito-express")
 const AWS = require('aws-sdk');
 const uuidv1 = require('uuid/v1');
 const bodyParser = require('body-parser');
+const Redis = require("redis");
 const app = express()
 const authenticatedRoute = express.Router();
 const port = 8080
-const cart = require('./dynamo/cart')
+
+// const cart = require('./dynamo/cart')
+const cart = require('./redis/cart')
+
 const item = require('./dynamo/item')
 const Customer = require('./dynamo/customer')
 const Guest = require('./dynamo/guest') 
@@ -23,8 +27,14 @@ const cognitoExpress = new CognitoExpress(config.cognito);
 const mailgun = new Mailgun(config.mailgun.secretApiKey) 
 const stripe = require("stripe")(config.stripe.secretApiKey);
 
+
 let docClient = new AWS.DynamoDB.DocumentClient()
 let dynamodb = new AWS.DynamoDB()
+const redis = Redis.createClient({
+	"host" : config.redis.host,
+	"port" : config.redis.port,
+	"password" : config.redis.password
+});
 
 app.use("/priv", cors(), authenticatedRoute);
 app.use(cors())
@@ -388,7 +398,7 @@ app.get("/cart", function(req, res, next) {
 	}
 	// return cart data
 	console.log(`Cart requested for cartid: ${cartid}`)
-	cart.get(dynamodb, cartid, function(err, r) {
+	cart.get(redis, cartid, function(err, r) {
 		if (err) {
 			return res.status(502).send(err)
 		}
@@ -439,7 +449,7 @@ app.post("/cart", function(req, res, next) {
 		return res.status(502).send('invalid action')
 	}
 	console.log(`adding item to cart: ${JSON.stringify(req.body)}`)
-	cart.add(docClient, cartid, req.body, function(err, r) {
+	cart.add(redis, cartid, req.body, function(err, r) {
 		if (err) {
 			console.log(err)
 			return res.status(502).send("An error occured")

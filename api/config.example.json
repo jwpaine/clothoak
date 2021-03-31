@@ -11,9 +11,10 @@
         "tokenExpiration": 3600000
     },
     "redis" : {
-        "host": "",
-        "username" : "",
-        "password" : ""
+        "host": "127.0.0.1",
+        "post" : "6379",
+        "password" : "secret"
+
     },
     "mailgun" : {
         "secretApiKey" : ""
