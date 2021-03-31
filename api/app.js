@@ -433,7 +433,7 @@ app.post("/cart", function(req, res, next) {
 			console.log('action = delete')		 
 			if (cartIndex != null) {
 				console.log(`request to delete cart item: ${cartIndex}`)
-				cart.delete(docClient, cartid, cartIndex, function(err, r) {
+				cart.delete(redis, cartid, cartIndex, function(err, r) {
 					if (err) {
 						console.log(err)
 						return

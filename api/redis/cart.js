@@ -94,24 +94,32 @@ exports.add = function(redis, cartid, item, callback) {
 
 }
 
-exports.delete = function(docClient, cartid, index, callback) {
+exports.delete = function(redis, cartid, index, callback) {
 
-	// docClient.update({
-	// 	TableName: 'clothoak_cart',
-    //    	Key: { 'id': cartid },
-    //    	ReturnValues: "ALL_NEW",
-    //    	UpdateExpression: "REMOVE #i[" + index + "]",
-    //    	ExpressionAttributeNames : {
-    //    		"#i": "cartitems"
-    //    	}
-    //    }, function(err, data) {
-	// 		if(err) {
-    //        		callback(err, null)
-	// 			return
-	// 		} 
-	// 		let cartitems = data.Attributes.cartitems
-	// 		callback(null, cartData(cartitems))
-	// 	})
+    redis.get(cartid, function(err, cart) {
+        if (err) {
+            console.log(err)
+            callback(err, null)
+            return
+        }
+        if(cart) {
+            let c = JSON.parse(cart)
+            if(index <= c.cartitems.length) {
+                c.cartitems.splice(index, 1)
+                if(c.cartitems.length > 0) {
+                    redis.set(cartid, JSON.stringify(c));
+                } else {
+                    console.log(`redis: empty cart. Removing key ${cartid}`)
+                    redis.del(cartid)
+                }
+                
+                callback(null, cartData(c.cartitems))
+                return
+            }
+            callback('Out of bounds', null)
+        }
+     
+    });
     
 }
 
