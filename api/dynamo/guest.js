@@ -31,25 +31,48 @@ function Guest(cartid) {
 	this.customerData = null
 }
 
-Guest.prototype.get = function(dynamodb, callback) {
+Guest.prototype.get = function(redis, callback) {
 
-	var params = {
-		TableName : 'clothoak_cart',
-		// AttributesToGet: [ "cartitems" ],
-		Key : {
-			"id" : { 
-				"S" : this.cartid 
-			}
-		}
-	}
-	/* retrive cart data */
-	dynamodb.getItem(params, function(err, data){
-   		if(err){
-   			callback(err, null)
-   			return
-   		}
-		callback(null, attr.unwrap(data.Item))
-	})
+	// var params = {
+	// 	TableName : 'clothoak_cart',
+	// 	// AttributesToGet: [ "cartitems" ],
+	// 	Key : {
+	// 		"id" : { 
+	// 			"S" : this.cartid 
+	// 		}
+	// 	}
+	// }
+	// /* retrive cart data */
+	// dynamodb.getItem(params, function(err, data){
+   	// 	if(err){
+   	// 		callback(err, null)
+   	// 		return
+   	// 	}
+	// 	callback(null, attr.unwrap(data.Item))
+	// })
+	redis.get(this.cartid, function(err, cart) {
+        if (err) {
+            callback(err, null)
+            return
+        }
+        if(cart) {
+            let c = JSON.parse(cart)
+            callback(null, c)
+            return
+        }
+        console.log('redis: not found')
+        callback(null, {})
+    });
+}
+
+Guest.prototype.delete = function(redis, callback) {
+	redis.del(this.cartid, function(err, response) {
+		if (err) {
+		   callback(err, null)
+		   return
+		} 
+		callback(null, response)
+	 })
 }
 
 Guest.prototype.cache = function(customerData) {
@@ -182,28 +205,24 @@ Guest.prototype.address = function() {
 				callback(null, address)
 			})
 		},
-		update: (docClient, address, addressType, callback) => {
+		update: (redis, address, addressType, callback) => {
 			console.log(`updating address`);
-			docClient.update({
-            	TableName: 'clothoak_cart',
-            	Key: { 'id': this.cartid },
-            	ReturnValues: 'UPDATED_NEW',
-            	UpdateExpression: 'set #addressType = :address',
-            	ExpressionAttributeNames: {
-                	'#addressType': addressType
-            	},
-            
-            	ExpressionAttributeValues: {
-                    ':address': address
-                }
-            }, function(err, data) {
-                
-				if(err) {
-               		callback(err, null)
-                   	return
-				 }
-               	callback(null, data["Attributes"])
-            })
+			let cartid = this.cartid
+			redis.get(cartid, function(err, cart) {
+				if (err) {
+					console.log(err)
+					callback(err, null)
+					return
+				}
+				if(cart) {
+					let c = JSON.parse(cart)
+					c[addressType] = address;
+					redis.set(cartid, JSON.stringify(c));
+					callback(null, c)
+					return
+				}
+				callback(null, {}) 
+			});
 		}
 	}
 

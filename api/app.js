@@ -136,10 +136,11 @@ app.post("/payment", function(req, res, next) {
 	let guest = new Guest(cartid)
 
 
-	guest.get(dynamodb, function(err, g) {
+	guest.get(redis, function(err, g) {
 		if (err) return res.status('502').send(err)
 
 		console.log(`guest data obtained: ${JSON.stringify(g)}`)
+
 
 		let email = g.shipping.email
 		let customer = new Customer(email)
@@ -148,6 +149,15 @@ app.post("/payment", function(req, res, next) {
 				if (err) return res.status(502).send(err)
 			}
 			console.log(`Guest saved as new customer: ${JSON.stringify(c)}`)
+
+			guest.delete(redis, function(err, r) {
+				if (err) {
+					console.log(err)
+					return
+				}
+				console.log('guest cart deleted')
+			})
+			
 			customer.cache(c)
 
 			StripeConnect.createCustomer(stripe, req.body.id, email, c.shipping, function(err, stripeCustomer) {
@@ -302,7 +312,7 @@ app.post("/guest", function(req, res, next) {
 
 	let guest = new Guest(cartid)
 
-	guest.address().update(docClient, req.body, 'shipping', function(err, r) {
+	guest.address().update(redis, req.body, 'shipping', function(err, r) {
 		if (err) {
 			console.log(`err`)
 			return res.status(502).send(err)
@@ -317,12 +327,12 @@ app.get("/guest", function(req, res, next) {
 
 	let cartid = req.header('Cartid')
 
-	console.log(`updating data for guest: ${cartid}`)
+	console.log(`obtaining data for guest: ${cartid}`)
 	let guest = new Guest(cartid)
 
-	guest.get(dynamodb, function(err, r) {
+	guest.get(redis, function(err, r) {
 		if (err) {
-			console.log(err) 
+			console.log(err)  
 			return res.status(502).send(err)
 		}
 		console.log(`success`)
