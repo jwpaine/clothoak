@@ -50,8 +50,6 @@ authenticatedRoute.use(function(req, res, next) {
     let accessTokenFromClient = req.header('Authorization')
     //Fail if token not present in header. 
 	if (!accessTokenFromClient) return res.status(401).send("Access Token missing from header")
-	
- 
     cognitoExpress.validate(accessTokenFromClient, function(err, response) {
         //If API is not authenticated, Return 401 with error message. 
         if (err) return res.status(401).send(err);
@@ -63,7 +61,6 @@ authenticatedRoute.use(function(req, res, next) {
 
 
 authenticatedRoute.post("/payment", function(req, res, next) {
-
 	// get customer data by email
 	let customer = new Customer(res.locals.user.email)
 
@@ -135,7 +132,6 @@ app.post("/payment", function(req, res, next) {
 
 	let guest = new Guest(cartid)
 
-
 	guest.get(redis, function(err, g) {
 		if (err) return res.status('502').send(err)
 
@@ -157,7 +153,7 @@ app.post("/payment", function(req, res, next) {
 				}
 				console.log('guest cart deleted')
 			})
-			
+
 			customer.cache(c)
 
 			StripeConnect.createCustomer(stripe, req.body.id, email, c.shipping, function(err, stripeCustomer) {
@@ -221,44 +217,6 @@ app.post("/payment", function(req, res, next) {
 	})
 })
 
-			
-	// customer.get(dynamodb, function(err, c) {
-	// 	if (err) return res.status('502').send(err)
-		
-	// 	customer.cache(c)
-	// 	if (c.stripecustomer) {
-	// 		console.log(`stripe customer exists`)
-	// 		// get cart total
-	// 		customer.cart().get(null, function(err, cartData) {
-	// 			if (err) return res.status(502).send(err)
-	// 		    // TODO: verify cartData	
-	// 			console.log(`cart total: ${cartData.total}`)
-	// 			// charge customer
-	// 			StripeConnect.chargeCustomer(stripe, c.stripecustomer.id, res.locals.user.email, cartData.total, function(err, charge) {
-	// 				if (err) return res.status(502).send(err)
-				
-	// 				// save order and empty cart	
-	// 				customer.order().save(docClient, cartData, charge, c.stripecustomer, function(err, r) {
-	// 					if (err) return res.status(502).send(err)
-						
-	// 					res.send('success!')
-	// 				});
-	// 			})	
-				
-	// 			return
-	// 		})	
-	// 	return
-	// 	} 
-	//	console.log(`stripe customer does not exist`)
-		// create stripeCustomer
-		// charge StripeCustomer
-		// create order object
-		// save stripeCustomer, clear cart, append order
-	// })
-	
-//	console.log(`--> ${JSON.stringify(req.body)}`)
-
-
 authenticatedRoute.get("/customer", function(req, res, next) {
 	
 	let customer = new Customer(res.locals.user.email)
@@ -303,24 +261,37 @@ authenticatedRoute.post("/address", function(req, res, next) {
 
 })
 
-app.post("/guest", function(req, res, next) {
+app.post("/address", function(req, res, next) {
 
 	let cartid = req.header('Cartid')
 
-	console.log(`updating data for guest using cartid: ${cartid}`)
+	console.log(`updating address for guest using cartid: ${cartid}`)
 	console.log(`${JSON.stringify(req.body)}`) 
 
-	let guest = new Guest(cartid)
-
-	guest.address().update(redis, req.body, 'shipping', function(err, r) {
+	// check if customer exists first
+	let customer = new Customer(req.body.email)
+	console.log('checking if customer exists')
+	customer.exists(dynamodb, function(err, e) {
 		if (err) {
 			console.log(`err`)
-			return res.status(502).send(err)
+			
 		}
-		console.log(`success`)
-		res.send(r)
-	})
+		if(e){
+			return res.status(200).send('exists') 
+		}
 
+		let guest = new Guest(cartid)
+
+		guest.address().update(redis, req.body, 'shipping', function(err, r) {
+			if (err) {
+				console.log(`err`)
+				return res.status(502).send(err)
+			}
+			console.log(`success`)
+			res.send(r)
+		})
+
+	})
 })
 
 app.get("/guest", function(req, res, next) {

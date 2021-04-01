@@ -54,6 +54,26 @@ var params = {
 
 }
 
+Customer.prototype.exists = function(dynamodb, callback) {
+	var params = {
+		TableName : 'clothoak_subscription',
+		AttributesToGet: [ "email" ],
+		Key : {
+			"email" : {
+				"S" : this.email
+			}
+		}
+	}
+	dynamodb.getItem(params, function(err, data){
+   		if(err){
+   			callback(err, null)
+   			return
+   		}
+		
+		callback(null, attr.unwrap(data.Item).email != null)
+	})
+}
+
 Customer.prototype.get = function(dynamodb, callback) {
 
 	var params = {

@@ -3,8 +3,9 @@ let defaultState = {
 }
 
 const mainReducer = (state = defaultState, action) => {
-    console.log(`customer reduced ---> ${JSON.stringify(action.payload)}`)
+    console.log(`action type --> ${action.type}`)
     if(action.type==="SHOW_CUSTOMER") {
+        console.log('show')
         return {
             ...state,
             data: action.payload || defaultState.data
@@ -19,6 +20,12 @@ const mainReducer = (state = defaultState, action) => {
                 ...state,
                 order: action.payload || defaultState.data
             }
+    } else if (action.type==="ADD_ERROR") {
+        console.log('add error!')
+		return {
+			...state,
+			errorMessage: action.payload
+		}
     } else {
         return {
             ...state

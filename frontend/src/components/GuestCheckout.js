@@ -67,6 +67,26 @@ class GuestCheckout extends Component {
 
     }
 
+    renderErrorMessage = () => {
+
+		if (!this.props.errorMessage) {
+			return
+		}
+
+        console.log(`error message present: ${JSON.stringify(this.props.errorMessage)}`)
+		if (this.props.errorMessage.length != 0) {
+			return (
+				<div className="messages">
+					{this.props.errorMessage.map(message => (
+						<div key={message.key} className={`message message--error`}>
+							{message.text}
+						</div>
+					))}
+				</div>
+			)
+		}
+}
+
     // renderSubscription = subscription => {
     //     if(!subscription) {
     //         return
@@ -213,6 +233,7 @@ class GuestCheckout extends Component {
             <div> 
                 <h1>Where should we send it?</h1> 
                 <p>Already have an account? <Link to={`/signin`}>signin</Link></p>  
+                { this.renderErrorMessage() }
                 <Address name="shippingAddress" guest={true} preFill={data} onSubmit={this.updateGuest.bind(this)}/>
                
             </div> 
@@ -255,6 +276,7 @@ class GuestCheckout extends Component {
             <div className="checkout">
 
                 <div className="checkout__address">
+                    
                     { this.renderShipping(this.props.customer.data) }
                     {/*{ this.renderBilling(this.props.subscription.data) }*/}
                 </div>

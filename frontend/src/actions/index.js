@@ -680,17 +680,29 @@ export const updateShippingAddress = (formProps, callback) => async dispatch => 
 
 export const updateGuest = (formProps, callback) => async dispatch => {
 
-	console.log(`Saving Guest Info ${JSON.stringify(formProps)}`)
+	console.log(`Saving Guest address ${JSON.stringify(formProps)}`)
 	dispatch({type: ADD_ERROR, payload: "" })
+
+	let messages = []
+	
 	let headers = {
 		"headers": {
 			'Content-Type': 'application/json',
 			"cartid" : localStorage.getItem('cartid'),
 		},
 	} 
-	const response = await axios.post(`${api_url}/guest`, formProps, headers ).then((response)=>{
+	const response = await axios.post(`${api_url}/address`, formProps, headers ).then((response)=>{
 		// dispatch({type : "SHOW_SUBSCRIPTION", payload: response.data})
-		dispatch({type : "SHOW_CUSTOMER", payload: response.data}) 
+		if(response.data == 'exists') {
+			console.log('customer already exists!')
+		
+			messages.push({text: `customer already exists! Please login`, key: 'exists'})
+			dispatch({type: ADD_ERROR, payload: messages })
+			return
+		} else {
+			dispatch({type : "SHOW_CUSTOMER", payload: response.data}) 
+		}
+	
 
 	}).catch(function (error) {
 	});
