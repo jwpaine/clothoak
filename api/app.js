@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const CognitoExpress = require("cognito-express")
 const AWS = require('aws-sdk');
-const uuidv1 = require('uuid/v1');
+const {v1: uuidv1} = require('uuid');
 const bodyParser = require('body-parser');
 const Redis = require("redis");
 const app = express()
@@ -274,7 +274,6 @@ app.post("/address", function(req, res, next) {
 	customer.exists(dynamodb, function(err, e) {
 		if (err) {
 			console.log(`err`)
-			
 		}
 		if(e){
 			return res.status(200).send('exists') 
@@ -318,13 +317,35 @@ authenticatedRoute.get("/cart", function(req, res, next) {
 	let cartid = req.header('Cartid')
 	if(cartid){
 		console.log(`merge cartid ${cartid} for user ${res.locals.user.email}`)
-		cart.merge(dynamodb, docClient, cartid, res.locals.user.email, function(err, r) {
-			if (err) {
-				return res.status(502).send(err)
+		// pull in guest data
+		let guest = new Guest(cartid)
+		guest.get(redis, function(err, g) {
+			if(g.cartitems && g.cartitems.length > 0) {
+				console.log(`guest cart --> ${JSON.stringify(g.cartitems)}`)
+				let customer = new Customer(res.locals.user.email) 
+
+				customer.cart().add(docClient, g.cartitems, function(err, r) {
+					if (err) {
+						console.log(`err`)
+						return res.status(502).send(err)
+					}
+					console.log(`success`)
+					// @TODO delete guest
+					res.send(r)
+				})
+
 			}
-			res.send(r)
-		})
-		return
+		
+			
+		});
+		// cart.merge(dynamodb, docClient, cartid, res.locals.user.email, function(err, r) {
+		// 	if (err) {
+		// 		return res.status(502).send(err)
+		// 	}
+		// 	res.send(r)
+		// })
+		 return
+
 	}
 
 	let customer = new Customer(res.locals.user.email) 
@@ -466,7 +487,8 @@ authenticatedRoute.post("/cart", function(req, res, next) {
 		return res.status(502).send('invalid action')
 	}
 				
-	customer.cart().add(docClient, req.body, function(err, r) {
+	let cartitems = [req.body] // @TODO validate!
+	customer.cart().add(docClient, cartitems, function(err, r) {
 		if (err) {
 			console.log(`err`)
 			return res.status(502).send(err)

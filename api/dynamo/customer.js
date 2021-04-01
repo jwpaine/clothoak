@@ -263,8 +263,8 @@ Customer.prototype.cart = function() {
 		}	
 	}
 	return {
-		add: (docClient, item, callback) => { 
-			console.log(`adding cart item ${JSON.stringify(item)} for user ${this.email}`)
+		add: (docClient, items, callback) => { 
+			console.log(`adding cart item ${JSON.stringify(items)} for user ${this.email}`)
 			docClient.update({
 				TableName: 'clothoak_subscription',
 				Key: { 'email': this.email },
@@ -274,7 +274,7 @@ Customer.prototype.cart = function() {
 					'#cartitems': 'cartitems'
 				},
 				ExpressionAttributeValues: {
-					':cartitems': [item],
+					':cartitems': items,
 					':empty_list': []
 				}
 			}, function(err, data) {
