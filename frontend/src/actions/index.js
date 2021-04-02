@@ -345,7 +345,7 @@ export const addItem = (formProps, item, callback) => async dispatch => {
 		})
 	}
 
-	if (formProps.qty.trim() == "" || formProps.qty == "0") {
+	if (formProps.qty.trim() == "" || parseInt(formProps.qty) < 1) {
 		messages.push({text: 'Please select quantity', key: 'qty'})
 	}
 	if (messages.length > 0) {
@@ -399,7 +399,7 @@ export const addItemPrivate = (formProps, item, callback) => async dispatch => {
 		}
 
 		
-		if (formProps.qty.trim() == "" || formProps.qty == "0") {
+		if (formProps.qty.trim() == "" || parseInt(formProps.qty) < 1) {
 			messages.push({text: 'Please select quantity'})
 		}
 		if (messages.length > 0) {
