@@ -450,14 +450,24 @@ app.post("/cart", function(req, res, next) {
 		console.log('non-implemented action provided')
 		return res.status(502).send('invalid action')
 	}
-	console.log(`adding item to cart: ${JSON.stringify(req.body)}`)
-	cart.add(redis, cartid, req.body, function(err, r) {
-		if (err) {
-			console.log(err)
-			return res.status(502).send("An error occured")
+	
+
+	item.validate(dynamodb, req.body, function(err) {
+
+		if(!err) {
+			cart.add(redis, cartid, req.body, function(err, r) {
+				if (err) {
+					console.log(err)
+					return res.status(400).send("An error occured")
+				}
+				console.log(`adding item to cart: ${JSON.stringify(req.body)}`)
+				res.send(r)
+			})
+			return
 		}
-		res.send(r)
+		return res.status(400).send(err)
 	})
+	
 })
 
 authenticatedRoute.post("/cart", function(req, res, next) {
