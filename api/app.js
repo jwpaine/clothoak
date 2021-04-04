@@ -496,16 +496,27 @@ authenticatedRoute.post("/cart", function(req, res, next) {
 		console.log('non-implemented action provided')
 		return res.status(502).send('invalid action')
 	}
-				
-	let cartitems = [req.body] // @TODO validate!
-	customer.cart().add(docClient, cartitems, function(err, r) {
-		if (err) {
-			console.log(`err`)
-			return res.status(502).send(err)
+
+	item.validate(dynamodb, req.body, function(err) {
+
+		if(!err) {
+
+			let cartitems = [req.body] // @TODO validate!
+			customer.cart().add(docClient, cartitems, function(err, r) {
+				if (err) {
+					console.log(`err`)
+					return res.status(502).send(err)
+				}
+				console.log(`success`)
+				res.send(r)
+			}) 
+			
+			return
 		}
-		console.log(`success`)
-		res.send(r)
+		return res.status(400).send(err)
 	})
+				
+	
 })
 
 app.listen(port, () => console.log(`Listening on port ${port}`))
