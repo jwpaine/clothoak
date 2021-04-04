@@ -331,28 +331,6 @@ export const addItem = (formProps, item, callback) => async dispatch => {
 	/* error handling */
 	let messages = []
 
-	// if (!formProps.size) {
-	// 	messages.push({text: 'Please select size option', key: 'size'})
-	// }
-	
-	if (item.options) {
-		Object.keys(item.options).map(type => {
-					
-			if(!formProps[type]) {
-				messages.push({text: `Please select ${type} option`, key: type})
-			}
-		
-		})
-	}
-
-	if (formProps.qty.trim() == "" || parseInt(formProps.qty) < 1) {
-		messages.push({text: 'Please select quantity', key: 'qty'})
-	}
-	if (messages.length > 0) {
-		dispatch({type: ADD_ERROR, payload: messages})
-		return
-	}
-
 	console.log(`adding item: ${JSON.stringify(formProps)} to cart`)
 
 	let cartid = localStorage.getItem('cartid') ? 
@@ -367,7 +345,16 @@ export const addItem = (formProps, item, callback) => async dispatch => {
 		dispatch({type : "SHOW_CART", payload: response.data})
 		callback()
 	}).catch(function (error) {
-		console.log(error)
+	
+		if (error.response.data.errors) {
+			error.response.data.errors.map(e => {
+				messages.push({text: e, key: 'SingleError'})
+			})
+
+			dispatch({type: ADD_ERROR, payload: messages})
+			return
+		} 
+		// generic error message if no errors list present in response
 		messages.push({text: "An error occured. Please try again.", key: 'SingleError'})
 		dispatch({type: ADD_ERROR, payload: messages})
 	});
@@ -377,35 +364,7 @@ export const addItemPrivate = (formProps, item, callback) => async dispatch => {
 
 	dispatch({type: ADD_ERROR, payload: []})
 
-	/* TODO: HANDLE AUTH */
-
-			/* error handling */
 		let messages = []
-
-		// if (!formProps.size) {
-		// 	messages.push({text: 'Please select size option'})
-		// }
-		console.log(`adding item: ${JSON.stringify(formProps)}`)
-
-	
-		if (item.options) {
-			Object.keys(item.options).map(type => {
-						
-				if(!formProps[type]) {
-					messages.push({text: `Please select ${type} option`, key: type})
-				}
-			
-			})
-		}
-
-		
-		if (formProps.qty.trim() == "" || parseInt(formProps.qty) < 1) {
-			messages.push({text: 'Please select quantity'})
-		}
-		if (messages.length > 0) {
-			dispatch({type: ADD_ERROR, payload: messages})
-			return
-		}
 
 		console.log(`adding item to private cart: ${JSON.stringify(formProps)}`)
 
@@ -419,7 +378,15 @@ export const addItemPrivate = (formProps, item, callback) => async dispatch => {
 			dispatch({type : "SHOW_CART", payload: response.data})
 			callback()
 		}).catch(function (error) {
-			console.log(error)
+			if (error.response.data.errors) {
+				error.response.data.errors.map(e => {
+					messages.push({text: e, key: 'SingleError'})
+				})
+	
+				dispatch({type: ADD_ERROR, payload: messages})
+				return
+			} 
+			// generic error message if no errors list present in response
 			messages.push({text: "An error occured. Please try again.", key: 'SingleError'})
 			dispatch({type: ADD_ERROR, payload: messages})
 		});
