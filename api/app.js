@@ -452,10 +452,10 @@ app.post("/cart", function(req, res, next) {
 	}
 	
 
-	item.validate(dynamodb, req.body, function(err) {
+	item.validate(dynamodb, req.body, function(err, validItem) {
 
 		if(!err) {
-			cart.add(redis, cartid, req.body, function(err, r) {
+			cart.add(redis, cartid, validItem, function(err, r) {
 				if (err) {
 					console.log(err)
 					return res.status(400).send("An error occured")
@@ -497,11 +497,10 @@ authenticatedRoute.post("/cart", function(req, res, next) {
 		return res.status(502).send('invalid action')
 	}
 
-	item.validate(dynamodb, req.body, function(err) {
+	item.validate(dynamodb, req.body, function(err, validItem) {
 
 		if(!err) {
-
-			let cartitems = [req.body] // @TODO validate!
+			let cartitems = [validItem] // @TODO validate!
 			customer.cart().add(docClient, cartitems, function(err, r) {
 				if (err) {
 					console.log(`err`)
@@ -509,7 +508,7 @@ authenticatedRoute.post("/cart", function(req, res, next) {
 				}
 				console.log(`success`)
 				res.send(r)
-			}) 
+			})
 			
 			return
 		}

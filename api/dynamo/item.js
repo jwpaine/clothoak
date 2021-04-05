@@ -29,43 +29,74 @@ exports.validate = function(dynamodb, cartItem, callback) {
                   TableName : 'clothoak_items',
                   Key : { "name" : { "S" : cartItem.name } }, 
             }
-            var errors = []
+           
             dynamodb.getItem(params, function(err, data){
-                  if(err){
-                        callback(err, null)
+                  if(err) {
+                        callback('Error', null)
+                        console.log(err)
                         return
                   } 
-                  let dbItem = attr.unwrap(data.Item);
-                  console.log(`dbitem: ${JSON.stringify(dbItem)}`)
-                  // validate options sent
-                  if (dbItem.options) {
-                       Object.keys(dbItem.options).map(option => {
-                             console.log(`option: ${option}`)
-                             if(!cartItem[option]) {
-                                   console.log('color not selected')
-                                   errors.push(`Please select ${option}`)
-                             }
-                       }) 
+                 
+                  // verify item exists
+                  if(!data.Item) {
+                        console.log('No such item')
+                        callback('No Such Item', null)
+                        return
                   }
+
+                  let dbItem = attr.unwrap(data.Item);
+                  var errors = []
+                  let validatedItem = {'name' : dbItem.name, 'image' : dbItem.image, 'price' : dbItem.price, 'qty' : cartItem.qty}
+
+                  //validate quantity
+                  if(cartItem.qty <= 0 || !Number.isInteger(parseInt(cartItem.qty))) {
+                        console.log('invalid quantity')
+                        errors.push(`Invalid quantity`)
+                  }
+
+                  // check all item options were included
+                  if (dbItem.options) {
+                        Object.keys(dbItem.options).map(option => {
+                              console.log(`validating item option: ${option}`)
+                              // option wasn't sent
+                              if(!cartItem[option]) {
+                                    console.log(`Option ${option} not present`)
+                                    errors.push(`Please select ${option}`)
+                              } else {
+                                    // option exists, validate attributes
+                                    let cartAttribute = cartItem[option];
+                                    let foundAttribute = false;
+                                    console.log(`validating attribute value: ${cartAttribute}`)
+                                    dbItem.options[option].attributes.map(dbAttribute => {
+                                          // if attribute found, add to validatedItem
+                                          console.log(`comparing: ${cartAttribute} -> ${dbAttribute}`)
+                                          if (cartAttribute == dbAttribute) {
+                                                console.log('Attribute valid, adding to validatedItem')
+                                                foundAttribute = true;
+                                                validatedItem[option] = cartAttribute
+                                                return
+                                          }
+                                    })
+                                    if (!foundAttribute) {
+                                          console.log(`No such attribute: ${cartAttribute}`)
+                                          errors.push(`No such attribute: ${cartAttribute}`)
+                                    }
+                              }
+                             
+                        })
+                  }
+                  // any errors? Return 'em!
                   if (errors.length > 0) {
-                        callback({'errors' : errors})
+                        callback({'errors' : errors}, null)
                         return
                   } 
                   
-                  // everything checks out!
-                  callback(null)
-                
+                  // everything checks out! Return validated item object for insertion
+                  callback(null, validatedItem)
             });
-
-
             return
       }
-
-      callback({'errors' : ['No such item']})
-
-      
-      
-    
+      callback('No name key present', null)
 }
 
 exports.notify = function(docClient, item, email, callback) {

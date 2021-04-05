@@ -462,6 +462,8 @@ export const loadCart = () => async dispatch => {
 
 export const loadGuest = (callback) => async dispatch => {
 
+	dispatch({type: ADD_ERROR, payload: ""})
+
 	console.log(`loading guest data`)
 	let cartid = localStorage.getItem('cartid')
 	let data = {
@@ -609,6 +611,7 @@ export const deleteCartItemPrivate = (formProps) => async dispatch => {
 export const loadCustomer = () => async dispatch => {
 
 	console.log(`loading customer data`)
+	dispatch({type: ADD_ERROR, payload: ""})
 
 
 	let data = {
