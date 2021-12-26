@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import * as actions from '../actions'
 import {compose} from "redux";
-
+import { A, Header as StyledHeader } from "../theme/elements"
 
 	const Wrapper = styled.section`
 
@@ -95,9 +95,7 @@ class Header extends Component {
 	}
 	render() {
 		return (
-			<header>
-
-				<div className="wrap">
+			<StyledHeader>
 
 					<Link className="logo" to="/">
 						ClothoaK
@@ -105,10 +103,7 @@ class Header extends Component {
 
 					{ this.renderLinks(this.countCartItems(this.props.cart.data)) }
 
-				</div>
-
-
-			</header>
+			</StyledHeader>
 		)
 	}
 }

@@ -10,11 +10,12 @@
     "query-string": "^6.13.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-helmet": "^6.1.0",
     "react-html-parser": "^2.0.2",
     "react-image-gallery": "^1.0.8",
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.3",
+    "react-scripts": "^5.0.0",
     "react-spinners": "^0.9.0",
     "react-stripe-checkout": "^2.6.3",
     "react-stripe-elements": "^5.1.0",
@@ -23,7 +24,9 @@
     "redux-thunk": "^2.3.0",
     "stripe": "^8.96.0",
     "styled-components": "^4.4.1",
-    "sweetalert2": "^10.0.2"
+    "sweetalert2": "^10.0.2",
+    "util": "^0.12.4",
+    "webfontloader": "^1.6.28"
   },
   "scripts": {
     "start": "react-scripts start",

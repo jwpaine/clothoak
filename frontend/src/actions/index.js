@@ -12,7 +12,7 @@ import {
 } from './types';
 
 import { CognitoUserPool, CognitoUserAttribute, CognitoUser, AuthenticationDetails, CognitoRefreshToken , AmazonCognitoIdentity, InitiateAuth} from 'amazon-cognito-identity-js';
-import AWS from 'aws-sdk' 
+import * as AWS from 'aws-sdk'  
 
 	var poolData = {
         UserPoolId : 'us-east-1_WA7fa9Lcs', // Your user pool id here
@@ -21,8 +21,8 @@ import AWS from 'aws-sdk'
 
 var cognitoUserr;
 
-let api_url = 'http://localhost:8080'   
-// let api_url = 'https://api.clothoak.com'  
+//let api_url = 'http://localhost:8080'   
+let api_url = 'http://popupshop-env.eba-7mq6ecun.us-east-1.elasticbeanstalk.com'  
 
 export const signup = (formProps, callback) => async dispatch => {
 

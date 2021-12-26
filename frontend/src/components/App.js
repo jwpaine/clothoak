@@ -3,18 +3,14 @@ import { Link } from 'react-router-dom'
 import Header from './Header'
 import styled from 'styled-components';
 
-	const Wrapper = styled.section`
+import Theme from "../theme/Main"
 
-		/* background: #1DA1F2; */
-		height: 100vh;
-		
-	`;
 
 export default ({ children }) => {
 	return (
-		<Wrapper>
+		<Theme>
 			<Header />  
 			{ children }
-		</Wrapper>
+		</Theme>
 	);
 }

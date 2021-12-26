@@ -16,7 +16,7 @@ const item = require('./dynamo/item')
 const Customer = require('./dynamo/customer')
 const Guest = require('./dynamo/guest') 
 
-const Mailgun = require('./mailgun')
+// const Mailgun = require('./mailgun')
 const StripeConnect = require('./stripe')
 
 
@@ -24,7 +24,7 @@ const StripeConnect = require('./stripe')
 const config = require('./config.json')
 AWS.config.update(config.aws);
 const cognitoExpress = new CognitoExpress(config.cognito);
-const mailgun = new Mailgun(config.mailgun.secretApiKey) 
+// const mailgun = new Mailgun(config.mailgun.secretApiKey) 
 const stripe = require("stripe")(config.stripe.secretApiKey);
 
 
@@ -32,9 +32,13 @@ let docClient = new AWS.DynamoDB.DocumentClient()
 let dynamodb = new AWS.DynamoDB()
 const redis = Redis.createClient({
 	"host" : config.redis.host,
-	"port" : config.redis.port,
-	"password" : config.redis.password
+	"port" : config.redis.port
 });
+
+// redis['auth'] = null;
+// redis.send_command('AUTH', [config.redis.username, config.redis.password]);
+
+// "password" : config.redis.password
 
 app.use("/priv", cors(), authenticatedRoute);
 app.use(cors())
@@ -106,13 +110,14 @@ authenticatedRoute.post("/payment", function(req, res, next) {
 
 
 						let body = `Thank you for your order! Your order is being processed and we will send another email once it has shipped. You may view order status anytime by visiting https://clothoak.com/account and clicking on 'order details' <br/><br/> ${orderDetails}`
-						mailgun.send('orders@clothoak.com', res.locals.user.email, 'Your ClothoaK.com order', body, function(err, r) {
-							if (err) {
-								console.log(err)
-								return
-							}
-							console.log('Order placement email sent successfully!')
-						})
+						// mailgun.send('orders@clothoak.com', res.locals.user.email, 'Your ClothoaK.com order', body, function(err, r) {
+						// 	if (err) {
+						// 		console.log(err)
+						// 		return
+						// 	}
+						// 	console.log('Order placement email sent successfully!')
+						// })
+						console.log('Order placement email would have been sent')
 
 					});
 				})	
@@ -201,13 +206,15 @@ app.post("/payment", function(req, res, next) {
 	
 	
 							let body = `Thank you for your order! Your order is being processed and we will send another email once it has shipped. You may view order status anytime by visiting https://clothoak.com/account and clicking on 'order details' <br/><br/> ${orderDetails}`
-							mailgun.send('orders@clothoak.com', email, 'Your ClothoaK.com order', body, function(err, r) {
-								if (err) {
-									console.log(err)
-									return
-								}
-								console.log('Order placement email sent successfully!')
-							})
+							// mailgun.send('orders@clothoak.com', email, 'Your ClothoaK.com order', body, function(err, r) {
+							// 	if (err) {
+							// 		console.log(err)
+							// 		return
+							// 	}
+							// 	console.log('Order placement email sent successfully!')
+							// })
+							console.log('Order placement email would have been sent')
+
 	
 						});
 					})	
