@@ -5,12 +5,16 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types'; // ES6
 
 import queryString from 'query-string'
-
+import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import * as actions from '../../actions'
 import {AUTH_ERROR} from "../../actions/types";
 
+import {Form, Input, H2, A, P, Button, Span, Main} from "../../theme/elements"
 
+const StyledField = styled(Field)`
+	${Input}
+`
 
 class Signin extends Component {
  
@@ -108,52 +112,42 @@ renderMessages = () => {
 		}
 
 		return (
-			<div className="signin">
-
-				<h1>Sign in </h1>
-
-				<form onSubmit={handleSubmit(this.onSubmit)}>
-					<fieldset>
-						<Field
-							name="email"
-							type="text"
-							component="input"
-							autoComplete="none"
-							placeholder="Email"
-						/>
-					</fieldset>
-					<fieldset>
-						<Field
-							name="password"
-							type="password"
-							component="input"
-							autoComplete="none"
-							placeholder="Password"
-						/>
-					</fieldset>
-
-					
-					<button>Sign In</button>
-					<p>or</p>
-					<Link to="/signup">Create Account</Link>
-					<p>/</p>
-					<Link to="/forgot">Forgot Password</Link>
-
-					{this.renderMessages()}
-
-					{/* { renderLoading(this.props.waitingReply) } */}
-					{/* <PulseLoader
-						size={150}
-						color={"#123abc"}
-						css="position:absolute;"
-						loading={this.props.waitingReply}
+			<Main>
+				
+					<Form onSubmit={handleSubmit(this.onSubmit)}>
+						<h1>Sign in </h1>
+							<StyledField 
+								name="email"
+								type="text"
+								component="input"
+								autoComplete="none"
+								placeholder="Email"
+							/>
 						
-					/> */}
-				</form>
+							<StyledField
+								name="password"
+								type="password"
+								component="input"
+								autoComplete="none"
+								placeholder="Password"
+							/>
+						
 
-				{ verfied(this.props.unVerified, this.resendVerification)}
+						
+						<Button>Sign In</Button>
+						<Span>or</Span>
+						<Link to="/signup">Create Account</Link>
+						<Span>/</Span>
+						<Link to="/forgot">Forgot Password</Link>
 
-			</div>
+						{this.renderMessages()}
+
+					</Form>
+
+					{ verfied(this.props.unVerified, this.resendVerification)}
+				
+
+			</Main>
 		)
 	}
 }

@@ -113,6 +113,24 @@ export const ItemOptionsContainer = styled.div`
   }
 `
 // general
+export const Main = styled.main`
+  display: flex;
+  justify-content: center; 
+  height: 100%; 
+`
+export const Form = styled.form`
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  width: 350px;
+  padding: 10px; 
+  ${props => query(props, 'phoneL', 'max', 'width: 100%;')}
+  text-align: center; 
+  > * {
+    width: 100%; 
+    margin: 5px; 
+  }
+`
 export const Message = styled.div`
   display: flex;
   justify-content: center; 
@@ -294,15 +312,14 @@ export const Banner = styled.div`
   flex-direction: column; 
   background-image: url(${props => props.image});  
 `
-export const Input = styled.input`
+export const Input = css`
   height: 48px; 
   border: 2px solid ${props => props.theme.color.light};
   color: ${props => props.theme.color.dark};
   font-size: 15px;
   font-weight:  ${props => props.theme.font.primary.weight.bold}; 
   text-align: center; 
-  border-radius: 5px; 
-  width: 80px; 
+  border-radius: 10px; 
 `
 export const Icon = styled.i`
   color: ${props => colored(props) || props.theme.color.primary}; 
@@ -321,7 +338,7 @@ export const Button = styled.button`
   font-size: 16px;   
   padding: 13px 32px;   
   text-transform: capitalize;
-  border-radius: 8px;  
+  border-radius: 10px;  
   font-weight: ${props => props.theme.font.primary.weight.bold};
   border: none; 
   cursor: pointer;
