@@ -117,6 +117,17 @@ export const Main = styled.main`
   display: flex;
   justify-content: center; 
   height: 100%; 
+
+  ${props => query(props, 'tabletL', 'max', `
+    flex-direction: column; 
+    align-items: center; 
+  `)}
+
+  section {
+    display: flex;
+    justify-content: center; 
+  }
+
 `
 export const Form = styled.form`
   display: flex;

@@ -4,12 +4,16 @@ import { compose } from 'redux'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types'; // ES6
 import queryString from 'query-string' 
-
+import styled from 'styled-components';
 
 import { Link } from 'react-router-dom';
 import * as actions from '../../actions'
 import {AUTH_ERROR} from "../../actions/types";
+import {Form, Input, H1, A, P, Button, Span, Main} from "../../theme/elements"
 
+const StyledField = styled(Field)`
+	${Input}
+`
 
 class ResetPassword extends Component {
  
@@ -97,34 +101,33 @@ resendVerification = () => {
 
 			// @TODO: clear fields!
 			return (
-				<div className="signin">
-					<h1>Set New Password</h1>
-					<form onSubmit={handleSubmit(this.verifyCode)}>
-						<fieldset>
-							<Field
+				<Main>
+					
+					<Form onSubmit={handleSubmit(this.verifyCode)}>
+						<H1>Set New Password</H1>
+							<StyledField
 								name="code"
 								type="text"
 								component="input"
 								autoComplete="none"
 								placeholder="code"
 							/>
-						</fieldset>
-						<fieldset>
-							<Field
+						
+							<StyledField
 								name="password"
 								type="password"
 								component="input"
 								autoComplete="none"
 								placeholder="password"
 							/>
-						</fieldset>
-						<button>Set Password</button>
+						
+						<Button>Set Password</Button>
 						<Link to={`/forgot`}>Resend Code</Link>
 						{this.renderMessages()}
 						{renderLoading(this.props.waitingReply)}
-					</form>
+					</Form>
 					{verfied(this.props.unVerified, this.resendVerification)}
-				</div>
+				</Main>
 			)
 
 

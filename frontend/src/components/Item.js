@@ -9,22 +9,22 @@ import { compose } from 'redux'
 import * as actionCreators from '../actions/index.js'
 import * as actions from '../actions'
 import {ADD_ERROR, AUTH_ERROR} from "../actions/types";
-
+import styled from 'styled-components';
 import ImageGallery from 'react-image-gallery'; 
 
 import Swal from 'sweetalert2' 
 
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 
-// const sizes = ['S', 'M', 'L', 'XL', '2XL', '3XL']
+import {Main, H1, Span, Button, P, A} from "../theme/elements"
+
+
+
 
 class Item extends Component {
 
 constructor(props) {
 	super(props)
-
-	// this.props.change("color", 'black')
-    
     props.dispatch({type: ADD_ERROR, payload: "" })
 	this.props.loadItem(this.props.match.params.name,  () => {
 	});
@@ -68,28 +68,24 @@ refreshSession = () => {
 
 renderErrorMessage = () => {
 
-		if (!this.props.errorMessage) {
-			return
-		}
+	if (!this.props.errorMessage) return
 
-		if (this.props.errorMessage.length != 0) {
-			return (
-				<div className="messages">
-					{this.props.errorMessage.map(message => (
-						<div key={message.key} className={`message message--error`}>
-							{message.text}
-						</div>
-					))}
-				</div>
-			)
-		}
-	
+	if (this.props.errorMessage.length != 0) {
+		return (
+			<div className="messages">
+				{this.props.errorMessage.map(message => (
+					<div key={message.key} className={`message message--error`}>
+						{message.text}
+					</div>
+				))}
+			</div>
+		)
+	}
 }
 
 renderSizeOptions = item => {
-	if (!item) {
-		return
-	}
+	if (!item) return
+
 	if (item.sizes) {
 		return (
 			<Field name="size" component="select">
@@ -105,56 +101,34 @@ renderSizeOptions = item => {
 }
 
 renderDescription = item => {
-	if (!item) {
-		return
-	}
+	if (!item) return
 
-	console.log(`desc: ${item.description}`)
-
-	return (
-		<div className="description">
-			{ReactHtmlParser(item.description)}
-		</div>
-	)
-
+	return ReactHtmlParser(item.description)
 }
 
 renderOptions = item => {
-	if (!item) {
-		return
-	}
+	if (!item) return
 
-	if (!item.options) {
-		return
-	}
-		return (
-			<div> { 
-				Object.keys(item.options).map(type =>
-					<Field name={type} component="select">
-						<option disabled value="">{type}</option>
-							{item.options[type].attributes.map(attribute => (
-								<option value={attribute} key={attribute}>
-									{attribute}
-								</option>
-							))}
-					</Field>
-				)} 
-			</div>
-		)
+	if (!item.options) return
+
+	return (
+		<div> { 
+			Object.keys(item.options).map(type =>
+				<Field key={type} name={type} component="select">
+					<option disabled value="">{type}</option>
+						{item.options[type].attributes.map(attribute => (
+							<option value={attribute} key={attribute}>
+								{attribute}
+							</option>
+						))}
+				</Field>
+			)} 
+		</div>
+	)
 }
 
 renderImages = item => {
-	if (!item) {
-		return
-	}
-
-	//  let images = []
-	//  for (var i in item.images) {
-	// 	 console.log(item.images[i].original)
-	// 	 let item_img = `https://s3.amazonaws.com/clothoak.com/static/images/items/${item.images[i].original}`
-	// 	 item.images[i].original = item_img
-	// // 	images.push({ original: `https://s3.amazonaws.com/clothoak.com/static/images/items/${item.images[i]}`})
-	//  }  
+	if (!item.images) return
 
 	return <ImageGallery items={item.images} showThumbnails={false} showPlayButton={false} showFullscreenButton={false} />;
 }
@@ -196,75 +170,59 @@ notifyWhenAvailable = item => {
 }
 
 renderButton = item => {
-	if (!item) {
-		return
-	}
+	if (!item) return
+	if (item.available > 0) return <Button>Add To Cart</Button>
 
-
-	console.log(`available qty: ${item.available}`)
-	if (item.available > 0) {
-		return (
-			<button>Add To Cart</button>
-		)
-	}
 	return (
-		<div className="unavailable">   
-			<p>Currently Out of Stock</p> 
-			<a onClick={() => this.notifyWhenAvailable(item)}>Notify When Available</a>  
-		</div>
+		<>  
+			<P>Currently Out of Stock</P> 
+			<A onClick={() => this.notifyWhenAvailable(item)}>Notify When Available</A>  
+		</>
 	)
 }
 
+
 renderItem = item => {
 	
-	if(!item.name) { 
-		return 
-	}
+	if(!item.name) return
 
     return (
-	    <div className="item-page">
-		    <div className="item">
-				<div className="img-wrap">
-					{/* <img src={`https://s3.amazonaws.com/clothoak.com/static/images/items/${item.image}`} /> */}
-					{ this.renderImages(item) }
-				</div>
+		<>
+			<H1>{item.name}</H1>
+			{this.renderDescription(item)}
+			<Span>${item.price}</Span>
+			{this.renderOptions(item)}
 
-				<div className="details">
-					<h1>{item.name}</h1>
-					{this.renderDescription(item)}
-					<p className="price">${item.price}</p>
-					<fieldset>
-
-						{this.renderOptions(item)}
-
-						<div className="quantity">
-							<label>Quantity</label>
-							<Field
-								name="qty"
-								type="text"
-								component="input"
-							/>
-						</div>
-					</fieldset>
-					{this.renderButton(item)} 
-					{this.renderErrorMessage()}
-					
-				</div>
-			</div>
-		</div>
+		</>
     )
 }
-
 
 	render() {
 
 		const { handleSubmit } = this.props;
+		const StyledForm = styled.form`
+			max-width: 500px; 
+		`
 		return(
-			<div>
-				<form onSubmit={handleSubmit(this.addItem)}>
-			        { this.renderItem(this.props.item.item) }
-				</form>
-			</div>
+			<Main>
+				<section>
+					{ this.renderImages(this.props.item.item) }
+				</section>
+				<section>
+					<StyledForm onSubmit={handleSubmit(this.addItem)}>
+						{ this.renderItem(this.props.item.item) }
+						<label>Quantity</label>
+						<Field
+							name="qty"
+							type="text"
+							component="input"
+						/>
+									
+						{this.renderButton(this.props.item.item)} 
+						{this.renderErrorMessage()}
+					</StyledForm>
+				</section>
+			</Main>
 		)
 	}
 }

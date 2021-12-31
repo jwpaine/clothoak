@@ -4,10 +4,17 @@ import { compose } from 'redux'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types'; // ES6
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
 import * as actions from '../../actions'
-
-
 import {AUTH_ERROR} from "../../actions/types";
+import {Form, Input, H1, A, P, Button, Span, Main} from "../../theme/elements"
+
+const StyledField = styled(Field)`
+	${Input}
+`
+
+
 
 class Signup extends Component {
 
@@ -50,37 +57,34 @@ renderSuccess = (props) => {
 	render() {
 		const { handleSubmit } = this.props;
 		return (
-			<div className="signup">
-				<h1>Sign up</h1>
-				<form onSubmit={handleSubmit(this.onSubmit)}>
-					<fieldset>
-						<Field
+			<Main>
+				
+				<Form onSubmit={handleSubmit(this.onSubmit)}>
+					<H1>Sign up</H1>
+						<StyledField
 							name="email"
 							type="text"
 							component="input"
 							autoComplete="none"
 							placeholder="Email"
 						/>
-					</fieldset>
-					<fieldset>
-						<Field
+					
+						<StyledField
 							name="password"
 							type="password"
 							component="input"
 							autoComplete="none"
 							placeholder="Password"
 						/>
-					</fieldset>
-
-					<div>{this.renderSuccess()}</div>
-					<button>Sign Up!</button>
-					<p>or</p>
+					{this.renderSuccess()}
+					<Button>Sign Up!</Button>
+					<Span>or</Span>
 					<Link to="/signin">Sign In</Link>
 
-					<div>{this.props.errorMessage}</div>
-				</form>
+					{this.props.errorMessage}
+				</Form>
 
-			</div>
+			</Main>
 		)
 	}
 }

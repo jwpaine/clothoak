@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import * as actions from '../../actions'
 import {AUTH_ERROR} from "../../actions/types";
 
-import {Form, Input, H2, A, P, Button, Span, Main} from "../../theme/elements"
+import {Form, Input, H1, A, P, Button, Span, Main} from "../../theme/elements"
 
 const StyledField = styled(Field)`
 	${Input}
@@ -115,7 +115,7 @@ renderMessages = () => {
 			<Main>
 				
 					<Form onSubmit={handleSubmit(this.onSubmit)}>
-						<h1>Sign in </h1>
+						<H1>Sign in </H1>
 							<StyledField 
 								name="email"
 								type="text"
