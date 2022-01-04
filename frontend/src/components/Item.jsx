@@ -18,9 +18,6 @@ import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from
 
 import {Main, H1, Span, Button, P, A} from "../theme/elements"
 
-
-
-
 class Item extends Component {
 
 constructor(props) {
@@ -112,7 +109,7 @@ renderOptions = item => {
 	if (!item.options) return
 
 	return (
-		<div> { 
+		<> { 
 			Object.keys(item.options).map(type =>
 				<Field key={type} name={type} component="select">
 					<option disabled value="">{type}</option>
@@ -123,14 +120,14 @@ renderOptions = item => {
 						))}
 				</Field>
 			)} 
-		</div>
+		</>
 	)
 }
 
 renderImages = item => {
 	if (!item.images) return
 
-	return <ImageGallery items={item.images} showThumbnails={false} showPlayButton={false} showFullscreenButton={false} />;
+	return <ImageGallery originalClass="imageGallery" items={item.images} showThumbnails={false} showPlayButton={false} showFullscreenButton={false} />;
 }
 
 notifyWhenAvailable = item => {
@@ -202,21 +199,53 @@ renderItem = item => {
 		const { handleSubmit } = this.props;
 		const StyledForm = styled.form`
 			max-width: 500px; 
+			display: flex;
+			flex-direction: column;
+
+			h1 {
+				text-align: left !important; 
+			}
+
+			select {
+				max-width: 145px;
+			}
+			input {
+				max-width: 50px;
+				margin: 0px 10px; 
+			}
+			div {
+				display: flex; 
+				align-items: center; 
+			}
+
+			> * {
+				margin: 8px;
+			}
+		`
+
+		const ProductImage = styled.section`
+			.image-gallery {
+				img {
+					width: 100%; 
+				}
+			}
 		`
 		return(
 			<Main>
-				<section>
+				<ProductImage>
 					{ this.renderImages(this.props.item.item) }
-				</section>
+				</ProductImage>
 				<section>
 					<StyledForm onSubmit={handleSubmit(this.addItem)}>
 						{ this.renderItem(this.props.item.item) }
-						<label>Quantity</label>
+						<div>
+							<Span>Quantity</Span>
 						<Field
 							name="qty"
 							type="text"
 							component="input"
 						/>
+						</div>
 									
 						{this.renderButton(this.props.item.item)} 
 						{this.renderErrorMessage()}

@@ -21,8 +21,8 @@ import * as AWS from 'aws-sdk'
 
 var cognitoUserr;
 
-//let api_url = 'http://localhost:8080'   
-let api_url = 'https://api.clothoak.com'  
+ let api_url = 'http://popupshop-env.eba-7mq6ecun.us-east-1.elasticbeanstalk.com'   
+//let api_url = 'https://api.clothoak.com'  
 
 export const signup = (formProps, callback) => async dispatch => {
 

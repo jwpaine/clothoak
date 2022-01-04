@@ -80,11 +80,20 @@
 
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form'
-
+import styled from 'styled-components';
 import {connect} from "react-redux";
 import { compose } from 'redux'
 
+import {Button, H1, Input} from "../theme/elements"
 
+const StyledField = styled(Field)`
+    ${Input}
+`
+
+const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+`
 
 class Address extends Component {
 
@@ -111,9 +120,11 @@ renderEmailInput = (guest) => {
         return
     }
 
+
+
     return (
         <div>
-              <Field
+              <StyledField
                     name="email"
                     type="text"
                     component="input"
@@ -126,20 +137,19 @@ renderEmailInput = (guest) => {
 }
  
     render() {
+       
         return (
-            <form form={this.props.form} form={this.form} onSubmit={this.props.handleSubmit}>
-
-                <fieldset>
+            <Form form={this.props.form} form={this.form} onSubmit={this.props.handleSubmit}>
                     {this.renderEmailInput(this.props.guest)}
                     
-                    <Field
+                    <StyledField
                         name="name"
                         type="text"
                         component="input"
                         autoComplete="name"
                         placeholder="Full Name"
-                    />
-                    <Field
+                    /> 
+                    <StyledField
                         name="address"
                         type="text"
                         component="input"
@@ -147,30 +157,29 @@ renderEmailInput = (guest) => {
                         placeholder="Address"
                     />
                    
-                    <Field
+                    <StyledField
                         name="city"
                         type="text"
                         component="input"
                         autoComplete="city"
                         placeholder="City"
                     />
-                    <Field
+                    <StyledField
                         name="state"
                         type="text"
                         component="input"
                         autoComplete="state"
                         placeholder="State"
                     />
-                    <Field
+                    <StyledField
                         name="zip"
                         type="text"
                         component="input"
                         autoComplete="zip"
                         placeholder="Zip"
                     />
-                </fieldset>
-                <button>Save</button>
-            </form>
+                <Button>Save</Button>
+            </Form>
         )
     }
 

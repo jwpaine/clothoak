@@ -112,20 +112,57 @@ export const ItemOptionsContainer = styled.div`
     } 
   }
 `
+//checkout
+export const CheckoutItem = styled.div`
+  display: flex;
+  padding: 10px; 
+  .details {
+    display: flex; 
+    flex-direction: column; 
+  } 
+  img {
+    max-width: 100px;
+  }
+`
 // general
 export const Main = styled.main`
   display: flex;
   justify-content: center; 
   height: 100%; 
+  
 
   ${props => query(props, 'tabletL', 'max', `
     flex-direction: column; 
     align-items: center; 
+    justify-content: flex-start; 
   `)}
 
   section {
     display: flex;
+    flex: 1;
+    max-width: 650px; 
+    padding: 20px;  
+    h1 {
+      text-align: center; 
+    }
+  
     justify-content: center; 
+    align-items: center; 
+    flex-direction: column; 
+
+    ${props => query(props, 'tabletL', 'max', `
+      flex: unset; 
+    `)} 
+    
+    &:nth-of-type(1) {
+      border-right: 1px solid ${props => props.theme.color.light}; 
+      ${props => query(props, 'tabletL', 'max', `
+        border-right: none; 
+      `)}
+    } 
+    
+    
+    
   }
 
 `

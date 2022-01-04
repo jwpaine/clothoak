@@ -4,7 +4,8 @@ exports.get = function(dynamodb, itemName, callback) {
 
 	 var params = {
         TableName : 'clothoak_items',
-        Key : { "name" : { "S" : itemName } }, 
+        Key : { "name" : { "S" : itemName } },
+        AttributesToGet: [ "available", "images", "options", "description", "price", "name" ]
       }
       dynamodb.getItem(params, function(err, data){
             if(err){

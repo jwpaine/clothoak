@@ -19,6 +19,8 @@ import CCForm from './CCForm'
 
 import Address from "./Address";
 
+import { Main } from "../theme/elements"
+
 
 class Checkout extends Component {
 
@@ -147,7 +149,7 @@ class Checkout extends Component {
         return (
             <div className="checkout__items">
                 {cart.cartitems.map( (item, index) => (
-                    <CartItem key={index} index={index} name={item.name} price={item.price} qty={item.qty} image={item.image} size={item.size}/>
+                    <CartItem key={index} index={index} item={item} />
                 ))}
                 <div className="checkout__totals">
                     <p><b>Subtotal</b>: ${cart.subtotal}</p>
@@ -251,32 +253,21 @@ class Checkout extends Component {
        // const { handleSubmit } = this.props;
 
         return(
-            <div className="checkout">
+            <Main>
 
-                <div className="checkout__address">
+                <section>
                     { this.renderShipping(this.props.customer.data) }
                     {/*{ this.renderBilling(this.props.subscription.data) }*/}
-                </div>
+                </section>
 
-                <div className="checkout__details">
+                <section>
                     {/*{ this.renderSubscription(this.props.subscription.data, this.props.cart.data) }*/}
                     { this.renderCartItems(this.props.cart.data)}
                     { this.renderSubmitButtons(this.props.customer.data, this.props.cart.data) }
+                </section>
 
 
-
-                </div>
-
-
-
-
-
-                {/*<label>Billing: </label>*/}
-                {/*<Address formId="billing" fieldNames={{'name' : 'billingName', 'address' : 'billingAddress'}} onSubmit={this.updateBillingAddress.bind(this)}/>*/}
-    
-
-
-            </ div>
+            </Main>
         )
     }
 }
