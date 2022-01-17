@@ -33,31 +33,14 @@ function Guest(cartid) {
 
 Guest.prototype.get = function(redis, callback) {
 
-	// var params = {
-	// 	TableName : 'clothoak_cart',
-	// 	// AttributesToGet: [ "cartitems" ],
-	// 	Key : {
-	// 		"id" : { 
-	// 			"S" : this.cartid 
-	// 		}
-	// 	}
-	// }
-	// /* retrive cart data */
-	// dynamodb.getItem(params, function(err, data){
-   	// 	if(err){
-   	// 		callback(err, null)
-   	// 		return
-   	// 	}
-	// 	callback(null, attr.unwrap(data.Item))
-	// })
-	redis.get(this.cartid, function(err, cart) {
+	redis.get(this.cartid, function(err, guest) {
         if (err) {
             callback(err, null)
             return
         }
-        if(cart) {
-            let c = JSON.parse(cart)
-            callback(null, c)
+        if(guest) {
+            let g = JSON.parse(guest)
+            callback(null, g)
             return
         }
         console.log('redis: not found')
@@ -287,8 +270,8 @@ Guest.prototype.cart = function() {
 
 
 		},
-		get: (dynamodb, callback) => { 
-			console.log(`obtaining cart data for user ${this.email}`)
+		get: (redis, callback) => { 
+			console.log(`obtaining cart data for user ${this.cartid}`)
 			// if customer data already exists, use prefetched
 			if (this.customerData) {
 				console.log(`prefetched`)
@@ -299,18 +282,30 @@ Guest.prototype.cart = function() {
 				return
 			}
 			// customer data not prefetched, obtain cart data
-			dynamodb.getItem(params, function(err, data) {
+			console.log('not prefetched')
+			redis.get(this.cartid, function(err, g) {
 				if (err) {
 					callback(err, null)
 					return
 				}
-				if (data.Item.cartitems) {
-					let cartitems = attr.unwrap(data.Item).cartitems
-					callback(null, cartData(cartitems))
-					return
-				}
-				callback(null, cartData([]));
+
+				console.log(`cart1: ${g}`)
+
+				callback(null, cartData(g.cartitems))
+
 			})
+			// dynamodb.getItem(params, function(err, data) {
+			// 	if (err) {
+			// 		callback(err, null)
+			// 		return
+			// 	}
+			// 	if (data.Item.cartitems) {
+			// 		let cartitems = attr.unwrap(data.Item).cartitems
+			// 		callback(null, cartData(cartitems))
+			// 		return 
+			// 	}
+			// 	callback(null, cartData([]));
+			// })
 		}
 	}
 }

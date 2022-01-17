@@ -24,52 +24,6 @@ exports.get = function(redis, cartid, callback) {
     });
 }
 
-// exports.merge = function(dynamodb, docClient, cartid, email, callback) {
-
-// 	var params = {
-// 		TableName : 'clothoak_cart',
-// 		AttributesToGet: [ "cartitems" ],
-// 		Key : { 
-// 			"id" : {
-// 				"S" : cartid 
-// 			}
-// 		}
-// 	}
-                          
-// 	dynamodb.getItem(params, function(err, data){
-// 		if(err){
-// 			callback(err, null)
-// 			return
-// 		}
-// 		if (data.Item && data.Item.cartitems) {
-// 			let cartitems = attr.unwrap(data.Item).cartitems
-// 			/* found items to merge */
-
-// 			docClient.update({
-// 				TableName: 'clothoak_subscription',
-// 				Key: { 'email': email },
-// 				ReturnValues: 'ALL_NEW',
-// 				UpdateExpression: 'set #cartitems = list_append(if_not_exists(#cartitems, :empty_list), :cartitems)',
-// 				ExpressionAttributeNames: {
-// 					'#cartitems': 'cartitems'
-// 				},
-// 				ExpressionAttributeValues: {
-// 					':cartitems': cartitems,
-// 					':empty_list': []
-// 				}
-// 			}, function(err, updated) {
-// 				if(err) {
-// 					callback(err, null)
-// 					return
-// 				}
-
-// 				let cart = updated.Attributes
-// 				callback(null, cartData(cart.cartitems))
-// 			});
-// 		}
-// 	})
-// }
-
 exports.add = function(redis, cartid, item, callback) {
 
     redis.get(cartid, function(err, cart) {
@@ -109,10 +63,8 @@ exports.delete = function(redis, cartid, index, callback) {
                 if(c.cartitems.length > 0) {
                     redis.set(cartid, JSON.stringify(c));
                 } else {
-                    console.log(`redis: empty cart. Removing key ${cartid}`)
                     redis.del(cartid)
                 }
-                
                 callback(null, cartData(c.cartitems))
                 return
             }

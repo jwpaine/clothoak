@@ -30,10 +30,15 @@ const stripe = require("stripe")(config.stripe.secretApiKey);
 
 let docClient = new AWS.DynamoDB.DocumentClient()
 let dynamodb = new AWS.DynamoDB()
-const redis = Redis.createClient({
-	"host" : config.redis.host,
-	"port" : config.redis.port
-});
+// const redis = Redis.createClient({
+// 	"host" : config.redis.host,
+// 	"port" : config.redis.port
+// });
+
+
+
+const FakeRedis= require("./FakeRedis")
+let redis = new FakeRedis()
 
 // redis['auth'] = null;
 // redis.send_command('AUTH', [config.redis.username, config.redis.password]);
@@ -151,13 +156,7 @@ app.post("/payment", function(req, res, next) {
 			}
 			console.log(`Guest saved as new customer: ${JSON.stringify(c)}`)
 
-			guest.delete(redis, function(err, r) {
-				if (err) {
-					console.log(err)
-					return
-				}
-				console.log('guest cart deleted')
-			})
+			
 
 			customer.cache(c)
 
@@ -175,7 +174,7 @@ app.post("/payment", function(req, res, next) {
 					StripeConnect.chargeCustomer(stripe, stripeCustomer.id, email, cartData.total, function(err, charge) {
 						if (err) {
 							console.log(err)
-							return res.status(502).send('error') 
+							return res.status(502).send(err) 
 						} 
 						// save order and empty cart	
 						customer.order().save(docClient, cartData, charge, stripeCustomer, function(err, r) {
@@ -185,6 +184,14 @@ app.post("/payment", function(req, res, next) {
 							}
 
 							res.send('success!')
+
+							guest.delete(redis, function(err, r) {
+								if (err) {
+									console.log(err)
+									return
+								}
+								console.log('guest cart deleted')
+							})  
 	
 							// send order info via email
 							let orderDetails = '--- Order Summary --- <br/>'
@@ -223,6 +230,10 @@ app.post("/payment", function(req, res, next) {
 		})
 	})
 })
+
+
+
+
 
 authenticatedRoute.get("/customer", function(req, res, next) {
 	
@@ -304,7 +315,7 @@ app.get("/guest", function(req, res, next) {
 
 	let cartid = req.header('Cartid')
 
-	console.log(`obtaining data for guest: ${cartid}`)
+
 	let guest = new Guest(cartid)
 
 	guest.get(redis, function(err, r) {
@@ -312,7 +323,7 @@ app.get("/guest", function(req, res, next) {
 			console.log(err)  
 			return res.status(502).send(err)
 		}
-		console.log(`success`)
+		console.log(`obtaining data for guest: ${cartid} : ${JSON.stringify(r)}`)
 		res.send(r)
 	})
  
@@ -411,6 +422,7 @@ app.get("/cart", function(req, res, next) {
 		if (err) {
 			return res.status(502).send(err)
 		}
+		console.log(`cartData: ${JSON.stringify(r)}`)
 		res.send(r)
 	})
 })  
